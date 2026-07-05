@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Pacific Climate Storytelling App{% endblock %}</title>
+    <title>{% block title %}Atoll{% endblock %}</title>
     <!-- Font Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,16 +150,18 @@
 <body>
 
     <header>
-        <div class="logo">PacificDataViz</div>
-        <nav>
+        <div class="logo">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuDBwBJYIqwZ5IlKm6ZciX48Tite1dBTj-9e3AHIEdBANq7PYVO8l2xrFu&s=10" alt="PacificDataViz Logo">
+        </div>
+        <nav style="display: flex; justify-content: flex-end; gap: 20px;">
             <a href="/">Home</a>
-            <a href="/app">Dashboard</a>
+            <a href="/app">Insights</a>
             <a href="/about">About</a>
         </nav>
         <div class="controls">
             <select id="fontSizeToggle" aria-label="Toggle Font Size">
-                <option value="100%">Medium Text</option>
                 <option value="90%">Small Text</option>
+                <option value="100%">Medium Text</option>
                 <option value="110%">Large Text</option>
             </select>
             <button id="themeToggle" aria-label="Toggle Light/Dark Theme">Dark Mode</button>
