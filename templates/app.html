@@ -4,36 +4,59 @@
 
 {% block content %}
 <div class="app-container">
-    <!-- Phase 1: Country Selection & Baselines -->
+    <!-- PHASE 1: ESTABLISH BASELINES -->
     <section class="phase-section" id="phase-1">
         <h2>Phase 1: Establish Baselines</h2>
         <div class="card">
-            <label for="countrySelect"><strong>Select a Pacific Nation:</strong></label>
-            <select id="countrySelect" class="form-select" onchange="updateDashboard()">
+            <label for="countrySelect"><strong>Select a Pacific Country or Territory:</strong></label>
+            <select id="countrySelect" class="form-select" onchange="updateDashboard()" style="width: 100%; max-width: 400px; padding: 10px; margin-top: 10px; font-family: inherit;">
                 <option value="none">-- Choose a Country --</option>
-                <option value="Fiji">Fiji</option>
-                <option value="Samoa">Samoa</option>
-                <option value="Vanuatu">Vanuatu</option>
-                <!-- Remainder of the 20 nations dynamically populated here -->
+                <option value="Papua New Guinea" data-flag="🇵🇬" data-pop="10,329,931" data-area="462,840" data-custom="The Huli Wigmen grow their hair for months to craft elaborate ceremonial wigs.">Papua New Guinea</option>
+                <option value="New Zealand" data-flag="🇳🇿" data-pop="5,228,100" data-area="268,021" data-custom="The Haka is a traditional Māori posture dance featuring vigorous movements and stamping of the feet.">New Zealand</option>
+                <option value="Fiji" data-flag="🇫🇯" data-pop="936,376" data-area="18,274" data-custom="Traditional welcomes center on the Kava ceremony, drinking an earthy infusion from a coconut shell.">Fiji</option>
+                <option value="Solomon Islands" data-flag="🇸🇧" data-pop="740,425" data-area="28,400" data-custom="Woven shell money is still actively used for traditional settlements and bride prices.">Solomon Islands</option>
+                <option value="Vanuatu" data-flag="🇻🇺" data-pop="334,506" data-area="12,189" data-custom="Land diving (Naghol) on Pentecost Island is the ancient precursor to modern bungee jumping.">Vanuatu</option>
+                <option value="French Polynesia" data-flag="🇵🇫" data-pop="308,872" data-area="4,167" data-custom="The Heiva i Tahiti is a massive annual traditional dance and sporting festival.">French Polynesia</option>
+                <option value="New Caledonia" data-flag="🇳🇨" data-pop="292,991" data-area="18,576" data-custom="The Kanak custom of 'La Coutume' involves offering crucial gifts like yams or fabric to hosts.">New Caledonia</option>
+                <option value="Samoa" data-flag="🇼🇸" data-pop="225,681" data-area="2,842" data-custom="Pe'a is the deeply traditional, intricate male tattoo covering the body from waist to knees.">Samoa</option>
+                <option value="Guam" data-flag="🇬🇺" data-pop="172,952" data-area="544" data-custom="The Chenchule' is a Chamorro system of social reciprocity involving mutual gifts and assistance.">Guam</option>
+                <option value="Kiribati" data-flag="🇰🇮" data-pop="133,515" data-area="811" data-custom="The Maneaba is the traditional meeting house that dictates the architecture and village life.">Kiribati</option>
+                <option value="Micronesia (FSM)" data-flag="🇫🇲" data-pop="115,224" data-area="702" data-custom="On the island of Yap, giant stone discs called Rai are traditionally used as physical currency.">Micronesia (FSM)</option>
+                <option value="Tonga" data-flag="🇹🇴" data-pop="107,773" data-area="747" data-custom="Wearing a ta'ovala (a woven mat) around the waist is required to show respect in formal settings.">Tonga</option>
+                <option value="Northern Mariana Islands" data-flag="🇲🇵" data-pop="49,796" data-area="464" data-custom="Local fiestas honoring patron saints are major events featuring abundant Chamorro food.">Northern Mariana Islands</option>
+                <option value="American Samoa" data-flag="🇦🇸" data-pop="43,915" data-area="199" data-custom="Fa'a Samoa (The Samoan Way) places immense importance on the extended family and chiefs.">American Samoa</option>
+                <option value="Marshall Islands" data-flag="🇲🇭" data-pop="41,996" data-area="181" data-custom="Kemem celebrates a child's first birthday, historically a major life milestone due to island survival rates.">Marshall Islands</option>
+                <option value="Palau" data-flag="🇵🇼" data-pop="18,058" data-area="459" data-custom="The Bai is a traditional men's meeting house, historically constructed without using nails.">Palau</option>
+                <option value="Cook Islands" data-flag="🇨🇰" data-pop="17,044" data-area="236" data-custom="Tivaevae is the highly respected art of making intricate, hand-sewn patchwork quilts as gifts.">Cook Islands</option>
+                <option value="Nauru" data-flag="🇳🇷" data-pop="12,780" data-area="21" data-custom="Weight lifting has historically been a revered national sport, tying to traditional concepts of physical strength.">Nauru</option>
+                <option value="Wallis and Futuna" data-flag="🇼🇫" data-pop="11,502" data-area="142" data-custom="Traditional royalty remains highly influential, with ceremonial feasts and Kava playing a central role.">Wallis and Futuna</option>
+                <option value="Tuvalu" data-flag="🇹🇻" data-pop="11,396" data-area="26" data-custom="The Fatele is a traditional dance performed to the rhythmic beating of a wooden box on festive occasions.">Tuvalu</option>
             </select>
             
             <div id="baseline-stats" style="margin-top: 20px; display: none;">
-                <h3 style="color: var(--primary-color);"><span id="display-country">Country</span> Overview</h3>
-                <p><strong>Population:</strong> <span id="display-population">--</span></p>
-                <p><strong>Land Area:</strong> <span id="display-area">--</span> km²</p>
-                <p><strong>Cultural Context:</strong> <span id="display-custom">--</span></p>
+                <h3 style="color: var(--primary-color); display: flex; align-items: center; gap: 10px;">
+                    <span id="display-flag" style="font-size: 2.5rem; line-height: 1;"></span>
+                    <span id="display-country">Country</span> Overview
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <p><strong>Population:</strong> <br><span id="display-population" style="font-size: 1.2rem; font-weight: 600;">--</span></p>
+                    <p><strong>Land Area:</strong> <br><span id="display-area" style="font-size: 1.2rem; font-weight: 600;">--</span> km²</p>
+                </div>
+                <p style="margin-top: 15px; padding: 15px; background: var(--nav-bg); border-radius: 5px; border-left: 4px solid var(--accent-bg);">
+                    <strong>Cultural Context & Customs:</strong> <br><span id="display-custom">--</span>
+                </p>
             </div>
         </div>
     </section>
 
-    <!-- Phase 2: Thematic Chapters -->
+    <!-- PHASE 2: THEMATIC CHAPTERS -->
     <section class="phase-section" id="phase-2" style="margin-top: 40px;">
         <h2>Phase 2: Thematic Impact Chapters</h2>
         
-        <div class="chapters-nav" style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button onclick="showChapter(1)">Agro-Ecosystems</button>
-            <button onclick="showChapter(2)">Ocean Health</button>
-            <button onclick="showChapter(3)">Socio-Economics</button>
+        <div class="chapters-nav" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button onclick="showChapter(1)" class="chapter-btn">Agro-Ecosystems</button>
+            <button onclick="showChapter(2)" class="chapter-btn">Ocean Health</button>
+            <button onclick="showChapter(3)" class="chapter-btn">Socio-Economics</button>
         </div>
 
         <!-- Chapter 1 -->
@@ -42,12 +65,11 @@
             <div class="chart-controls">
                 <button class="toggle-benchmark">Overlay Regional Benchmark</button>
             </div>
-            <!-- Plotly Container -->
             <div id="chart-crop-yield" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
-                [ Plotly Integration: Crop & Livestock Yields ]
+                <em style="color: var(--text-color); opacity: 0.7;">[ Interactive Plotly Chart: Crop & Livestock Yields ]</em>
             </div>
             <div class="dynamic-text">
-                <p><strong>Insight:</strong> In <span class="text-country">the selected nation</span>, recent data indicates a <span class="text-trend-agro">[XX]%</span> shift in agricultural yields compared to the regional baseline, driven primarily by localized weather anomalies.</p>
+                <p><strong>Insight:</strong> For <span class="text-country">the selected nation</span>, recent data indicates a significant variation in agricultural stability compared to regional baselines, driven primarily by localized weather anomalies.</p>
             </div>
         </div>
 
@@ -57,12 +79,11 @@
             <div class="chart-controls">
                 <button class="toggle-benchmark">Overlay Regional Benchmark</button>
             </div>
-            <!-- Plotly Container -->
             <div id="chart-sst" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
-                [ Plotly Integration: Sea Surface Temp Anomalies ]
+                <em style="color: var(--text-color); opacity: 0.7;">[ Interactive Plotly Chart: Mean Sea Surface Temp Anomalies ]</em>
             </div>
             <div class="dynamic-text">
-                <p><strong>Insight:</strong> Sea surface temperatures in <span class="text-country">the selected nation</span> have deviated by <span class="text-trend-ocean">[XX]°C</span>, directly correlating with changes recorded by the meteorological network.</p>
+                <p><strong>Insight:</strong> Local ocean temperatures around <span class="text-country">the selected nation</span> reflect shifting anomalies, impacting local marine networks and meteorological monitor stations.</p>
             </div>
         </div>
 
@@ -72,49 +93,67 @@
             <div class="chart-controls">
                 <button class="toggle-benchmark">Overlay Regional Benchmark</button>
             </div>
-            <!-- Plotly Container -->
             <div id="chart-socio" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
-                [ Plotly Integration: Tourism & Power Generation ]
+                <em style="color: var(--text-color); opacity: 0.7;">[ Interactive Plotly Chart: Tourism, Power & Taxes ]</em>
             </div>
             <div class="dynamic-text">
-                <p><strong>Insight:</strong> Infrastructure resilience and tourism arrivals in <span class="text-country">the selected nation</span> show a <span class="text-trend-socio">[XX]%</span> trend, emphasizing the economic toll of environmental shifts.</p>
+                <p><strong>Insight:</strong> Grid resilience, power generation metrics, and tourist arrivals within <span class="text-country">the selected nation</span> track alongside external environmental adjustments.</p>
             </div>
         </div>
     </section>
 
-    <!-- Phase 3: Strategic Action -->
+    <!-- PHASE 3: STRATEGIC ACTION -->
     <section class="phase-section" id="phase-3" style="margin-top: 40px;">
         <h2>Phase 3: Strategic Action & Adaptation</h2>
         <div class="card">
-            <h3 style="color: var(--primary-color);">Targeted Synthesis for <span class="text-country">Selected Nation</span></h3>
-            <div style="background: var(--nav-bg); padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid var(--primary-color);">
-                <p><strong>Recommended Strategy:</strong> Based on the data from Chapters 1-3, prioritize <span class="text-action">[placeholder intervention]</span> to address the compounding effects of <span class="text-issue">[placeholder issue]</span> on local infrastructure.</p>
+            <h3 style="color: var(--primary-color);">Targeted Synthesis Matrix</h3>
+            <div style="background: var(--nav-bg); padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid var(--primary-color);">
+                <p><strong>Adaptation Focus:</strong> Formulate specific targeted policies for <span class="text-country" style="font-weight: 600;">your chosen country</span> to buffer infrastructure and communities against structural risk.</p>
             </div>
-            <label for="llm-query"><strong>Query Specific Adaptation Measures:</strong></label>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <input type="text" id="llm-query" placeholder="e.g., How can we protect coastal tourism?" style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-color); color: var(--text-color);">
-                <button>Synthesize</button>
+            
+            <label for="llm-query"><strong>Query Local Adaptation Guidelines:</strong></label>
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <input type="text" id="llm-query" placeholder="e.g., Query targeted defense measures for infrastructure..." style="flex: 1; min-width: 250px; padding: 12px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-color); color: var(--text-color); font-family: inherit;">
+                <button type="button" style="padding: 12px 24px;">Synthesize Strategy</button>
             </div>
         </div>
     </section>
 </div>
 
 <script>
-    // Tabbed Navigation for Phase 2
+    // Tab switching for Phase 2 Chapters
     function showChapter(num) {
         document.querySelectorAll('.chapter-content').forEach(el => el.style.display = 'none');
         document.getElementById('chapter-' + num).style.display = 'block';
     }
     
-    // Dynamic text injection simulation
+    // UI rendering for Phase 1 Baseline injection
     function updateDashboard() {
-        const country = document.getElementById('countrySelect').value;
-        if(country !== 'none') {
-            document.getElementById('baseline-stats').style.display = 'block';
-            document.getElementById('display-country').innerText = country;
-            document.querySelectorAll('.text-country').forEach(el => el.innerText = country);
+        const select = document.getElementById('countrySelect');
+        const option = select.options[select.selectedIndex];
+        const baselineDiv = document.getElementById('baseline-stats');
+        
+        if (select.value !== 'none') {
+            baselineDiv.style.display = 'block';
+            
+            // Extract from option metadata
+            const countryName = select.value;
+            const flag = option.getAttribute('data-flag');
+            const pop = option.getAttribute('data-pop');
+            const area = option.getAttribute('data-area');
+            const custom = option.getAttribute('data-custom');
+            
+            // Dynamic text swap
+            document.getElementById('display-country').innerText = countryName;
+            document.getElementById('display-flag').innerText = flag;
+            document.getElementById('display-population').innerText = pop;
+            document.getElementById('display-area').innerText = area;
+            document.getElementById('display-custom').innerText = custom;
+            
+            // Global text spans replacement
+            document.querySelectorAll('.text-country').forEach(el => el.innerText = countryName);
         } else {
-            document.getElementById('baseline-stats').style.display = 'none';
+            baselineDiv.style.display = 'none';
         }
     }
 </script>
