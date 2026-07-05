@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}About | Pacific Climate Storytelling{% endblock %}
+
+{% block content %}
+<h1 style="color: var(--primary-color); text-align: center; margin-bottom: 40px;">About the Project</h1>
+
+<div class="card">
+    <h2>The Challenge</h2>
+    <p>
+        The <a href="https://pacificdatavizchallenge.org/" target="_blank">Pacific Dataviz Challenge</a> highlights a critical reality: 
+        Pacific Island countries are uniquely vulnerable to the impacts of climate change. From rising sea surface temperatures disrupting local marine ecosystems 
+        to shifting weather patterns threatening agricultural yields, the consequences are multi-faceted. 
+    </p>
+    <p>
+        The primary obstacle for policymakers and stakeholders is making sense of these massive, disconnected datasets. 
+        There is an urgent need to translate abstract data into tangible, localized narratives that clearly illustrate vulnerabilities and pathways to resilience.
+    </p>
+</div>
+
+<div class="card">
+    <h2>The Application</h2>
+    <p>
+        This web application is built to answer that challenge. By leveraging a Python backend (FastAPI) and dynamic frontend visualizations (Plotly), 
+        the app bridges the gap between raw data and public comprehension. 
+    </p>
+    <p>
+        We employ a <strong>Progressive Disclosure</strong> framework. Rather than overwhelming the user with a dashboard of 7 disconnected charts, 
+        metrics are grouped logically into thematic chapters. Furthermore, regional benchmarking is integrated directly into the charts, 
+        allowing users to instantly compare a country's localized crisis against the broader Pacific context.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Datasets Utilized</h2>
+    <p>This project harmonizes multiple distinct datasets to create a unified narrative:</p>
+    
+    <h4 style="margin-bottom: 5px;">Ocean & Atmospheric Health</h4>
+    <ul style="margin-top: 0;">
+        <li>Mean sea surface temperature anomalies</li>
+        <li>Meteorological monitoring network (disaggregated)</li>
+    </ul>
+
+    <h4 style="margin-bottom: 5px;">Agro-Ecosystems & Food Security</h4>
+    <ul style="margin-top: 0;">
+        <li>Crop yield (disaggregated)</li>
+        <li>Livestock yield (disaggregated)</li>
+    </ul>
+
+    <h4 style="margin-bottom: 5px;">Socio-Economics & Infrastructure</h4>
+    <ul style="margin-top: 0;">
+        <li>Tourist arrivals (disaggregated)</li>
+        <li>Power generation (disaggregated)</li>
+        <li>Environmental taxes (disaggregated)</li>
+    </ul>
+</div>
+{% endblock %}

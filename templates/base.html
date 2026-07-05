@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pacific Climate Storytelling App{% endblock %}</title>
+    <!-- Font Loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Dynamic Theming */
+        :root {
+            /* Light Theme Defaults */
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --primary-color: #005f8a; /* Darker Sky Blue for WCAG text contrast */
+            --accent-bg: #87CEEB; /* Classic Sky Blue */
+            --nav-bg: #f8fbfd;
+            --card-bg: #ffffff;
+            --border-color: #d1e5f0;
+            --btn-text: #000000;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Overrides */
+            --bg-color: #121619;
+            --text-color: #f0f4f8;
+            --primary-color: #87CEEB; /* Bright Sky Blue for Dark Mode */
+            --accent-bg: #003b5c;
+            --nav-bg: #1a2026;
+            --card-bg: #1e252b;
+            --border-color: #2a3742;
+            --btn-text: #ffffff;
+        }
+
+        /* Percentage-based scaling for accessibility */
+        html {
+            font-size: 100%;
+            transition: font-size 0.3s ease;
+        }
+        
+        html.font-small { font-size: 90%; }
+        html.font-large { font-size: 110%; }
+
+        body {
+            /* Setting Inter as primary, Century Schoolhouse as fallback */
+            font-family: 'Inter', 'Century Schoolhouse', serif, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Layout & Navigation */
+        header {
+            background-color: var(--nav-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--accent-bg);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        nav a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select, button {
+            background-color: var(--accent-bg);
+            color: var(--btn-text);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        button:hover, select:hover {
+            filter: brightness(0.9);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 70vh;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--nav-bg);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        /* Utility Classes */
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .btn-cta {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: opacity 0.3s;
+        }
+
+        .btn-cta:hover {
+            opacity: 0.9;
+        }
+        
+        a { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">PacificDataViz</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/app">Dashboard</a>
+            <a href="/about">About</a>
+        </nav>
+        <div class="controls">
+            <select id="fontSizeToggle" aria-label="Toggle Font Size">
+                <option value="100%">Medium Text</option>
+                <option value="90%">Small Text</option>
+                <option value="110%">Large Text</option>
+            </select>
+            <button id="themeToggle" aria-label="Toggle Light/Dark Theme">Dark Mode</button>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Pacific Dataviz Challenge. Built with FastAPI, Pandas, and Plotly.</p>
+    </footer>
+
+    <script>
+        // WCAG 2.1 Compliant Toggles
+
+        // 1. Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlEl = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlEl.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlEl.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+        });
+
+        // 2. Font Size Toggle Logic (Percentage based scaling)
+        const fontToggle = document.getElementById('fontSizeToggle');
+        const savedFont = localStorage.getItem('fontSize') || '100%';
+        
+        const applyFont = (size) => {
+            htmlEl.classList.remove('font-small', 'font-large');
+            if (size === '90%') htmlEl.classList.add('font-small');
+            if (size === '110%') htmlEl.classList.add('font-large');
+            fontToggle.value = size;
+        };
+        
+        applyFont(savedFont);
+
+        fontToggle.addEventListener('change', (e) => {
+            const newSize = e.target.value;
+            applyFont(newSize);
+            localStorage.setItem('fontSize', newSize);
+        });
+    </script>
+</body>
+</html>
