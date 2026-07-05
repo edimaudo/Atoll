@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Atoll{% endblock %}
+
+{% block content %}
+<div class="app-container">
+    <!-- Phase 1: Country Selection & Baselines -->
+    <section class="phase-section" id="phase-1">
+        <h2>Phase 1: Establish Baselines</h2>
+        <div class="card">
+            <label for="countrySelect"><strong>Select a Pacific Nation:</strong></label>
+            <select id="countrySelect" class="form-select" onchange="updateDashboard()">
+                <option value="none">-- Choose a Country --</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Samoa">Samoa</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <!-- Remainder of the 20 nations dynamically populated here -->
+            </select>
+            
+            <div id="baseline-stats" style="margin-top: 20px; display: none;">
+                <h3 style="color: var(--primary-color);"><span id="display-country">Country</span> Overview</h3>
+                <p><strong>Population:</strong> <span id="display-population">--</span></p>
+                <p><strong>Land Area:</strong> <span id="display-area">--</span> km²</p>
+                <p><strong>Cultural Context:</strong> <span id="display-custom">--</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2: Thematic Chapters -->
+    <section class="phase-section" id="phase-2" style="margin-top: 40px;">
+        <h2>Phase 2: Thematic Impact Chapters</h2>
+        
+        <div class="chapters-nav" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button onclick="showChapter(1)">Agro-Ecosystems</button>
+            <button onclick="showChapter(2)">Ocean Health</button>
+            <button onclick="showChapter(3)">Socio-Economics</button>
+        </div>
+
+        <!-- Chapter 1 -->
+        <div id="chapter-1" class="card chapter-content">
+            <h3 style="color: var(--primary-color);">Agro-Ecosystems & Food Security</h3>
+            <div class="chart-controls">
+                <button class="toggle-benchmark">Overlay Regional Benchmark</button>
+            </div>
+            <!-- Plotly Container -->
+            <div id="chart-crop-yield" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
+                [ Plotly Integration: Crop & Livestock Yields ]
+            </div>
+            <div class="dynamic-text">
+                <p><strong>Insight:</strong> In <span class="text-country">the selected nation</span>, recent data indicates a <span class="text-trend-agro">[XX]%</span> shift in agricultural yields compared to the regional baseline, driven primarily by localized weather anomalies.</p>
+            </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div id="chapter-2" class="card chapter-content" style="display: none;">
+            <h3 style="color: var(--primary-color);">Ocean & Atmospheric Health</h3>
+            <div class="chart-controls">
+                <button class="toggle-benchmark">Overlay Regional Benchmark</button>
+            </div>
+            <!-- Plotly Container -->
+            <div id="chart-sst" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
+                [ Plotly Integration: Sea Surface Temp Anomalies ]
+            </div>
+            <div class="dynamic-text">
+                <p><strong>Insight:</strong> Sea surface temperatures in <span class="text-country">the selected nation</span> have deviated by <span class="text-trend-ocean">[XX]°C</span>, directly correlating with changes recorded by the meteorological network.</p>
+            </div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div id="chapter-3" class="card chapter-content" style="display: none;">
+            <h3 style="color: var(--primary-color);">Socio-Economic & Infrastructure</h3>
+            <div class="chart-controls">
+                <button class="toggle-benchmark">Overlay Regional Benchmark</button>
+            </div>
+            <!-- Plotly Container -->
+            <div id="chart-socio" style="height: 350px; background: var(--nav-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; margin: 15px 0;">
+                [ Plotly Integration: Tourism & Power Generation ]
+            </div>
+            <div class="dynamic-text">
+                <p><strong>Insight:</strong> Infrastructure resilience and tourism arrivals in <span class="text-country">the selected nation</span> show a <span class="text-trend-socio">[XX]%</span> trend, emphasizing the economic toll of environmental shifts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3: Strategic Action -->
+    <section class="phase-section" id="phase-3" style="margin-top: 40px;">
+        <h2>Phase 3: Strategic Action & Adaptation</h2>
+        <div class="card">
+            <h3 style="color: var(--primary-color);">Targeted Synthesis for <span class="text-country">Selected Nation</span></h3>
+            <div style="background: var(--nav-bg); padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid var(--primary-color);">
+                <p><strong>Recommended Strategy:</strong> Based on the data from Chapters 1-3, prioritize <span class="text-action">[placeholder intervention]</span> to address the compounding effects of <span class="text-issue">[placeholder issue]</span> on local infrastructure.</p>
+            </div>
+            <label for="llm-query"><strong>Query Specific Adaptation Measures:</strong></label>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="text" id="llm-query" placeholder="e.g., How can we protect coastal tourism?" style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-color); color: var(--text-color);">
+                <button>Synthesize</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Tabbed Navigation for Phase 2
+    function showChapter(num) {
+        document.querySelectorAll('.chapter-content').forEach(el => el.style.display = 'none');
+        document.getElementById('chapter-' + num).style.display = 'block';
+    }
+    
+    // Dynamic text injection simulation
+    function updateDashboard() {
+        const country = document.getElementById('countrySelect').value;
+        if(country !== 'none') {
+            document.getElementById('baseline-stats').style.display = 'block';
+            document.getElementById('display-country').innerText = country;
+            document.querySelectorAll('.text-country').forEach(el => el.innerText = country);
+        } else {
+            document.getElementById('baseline-stats').style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
