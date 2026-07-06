@@ -149,26 +149,24 @@
 </head>
 <body>
 
-    <header>
-        <!-- <div class="logo">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuDBwBJYIqwZ5IlKm6ZciX48Tite1dBTj-9e3AHIEdBANq7PYVO8l2xrFu&s=10" 
-               alt="PacificDataViz Logo" 
-               style="width: 150px; height: auto;">
-        </div> -->
-        <nav style="display: flex; justify-content: flex-end; gap: 20px;">
-            <a href="/">Home</a>
-            <a href="/app">Insights</a>
-            <a href="/about">About</a>
-        </nav>
-        <div class="controls">
-            <select id="fontSizeToggle" aria-label="Toggle Font Size" style="width: 150px;">
-                <option value="90%">Small Text</option>
-                <option value="100%">Medium Text</option>
-                <option value="110%">Large Text</option>
-            </select>
-            <button id="themeToggle" aria-label="Toggle Light/Dark Theme" style="width: 150px;">Dark Mode</button>
-        </div>
-    </header>
+<header style="display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+    <!-- If you uncomment the logo, it will now sit to the left of your nav/controls -->
+    
+    <nav style="display: flex; gap: 20px;">
+        <a href="/">Home</a>
+        <a href="/app">Insights</a>
+        <a href="/about">About</a>
+    </nav>
+    
+    <div class="controls" style="display: flex; gap: 10px;">
+        <select id="fontSizeToggle" aria-label="Toggle Font Size" style="width: 150px;">
+            <option value="90%">Small Text</option>
+            <option value="100%">Medium Text</option>
+            <option value="110%">Large Text</option>
+        </select>
+        <button id="themeToggle" aria-label="Toggle Light/Dark Theme" style="width: 150px;">Dark Mode</button>
+    </div>
+</header>
 
     <main>
         {% block content %}{% endblock %}
