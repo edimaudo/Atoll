@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}About | Pacific Climate Storytelling{% endblock %}
+{% block title %}About | Understanding Pacific Island & Territories Climate Chaneg{% endblock %}
 
 {% block content %}
 <h1 style="color: var(--primary-color); text-align: center; margin-bottom: 40px;">About the Project</h1>
@@ -13,7 +13,7 @@
         to shifting weather patterns threatening agricultural yields, the consequences are multi-faceted. 
     </p>
     <p>
-        The primary obstacle for policymakers and stakeholders is making sense of these massive, disconnected datasets. 
+        One primary obstacle for policymakers and stakeholders is making sense of open source data to better understand the impact. 
         There is an urgent need to translate abstract data into tangible, localized narratives that clearly illustrate vulnerabilities and pathways to resilience.
     </p>
 </div>
@@ -21,23 +21,18 @@
 <div class="card">
     <h2>The Application</h2>
     <p>
-        This web application is built to answer that challenge. By leveraging a Python backend (FastAPI) and dynamic frontend visualizations (Plotly), 
-        the app bridges the gap between raw data and public comprehension. 
-    </p>
-    <p>
-        We employ a <strong>Progressive Disclosure</strong> framework. Rather than overwhelming the user with a dashboard of 7 disconnected charts, 
-        metrics are grouped logically into thematic chapters. Furthermore, regional benchmarking is integrated directly into the charts, 
-        allowing users to instantly compare a country's localized crisis against the broader Pacific context.
+        This web application is built to answer that challenge. By leveraging a clear narrative and data visualization, 
+        the app bridges the gap between raw data and public comprehension. It is built using fastAPI, Pandas, Plotly and Vercel.
     </p>
 </div>
 
-<div class="card">
-    <h2>Datasets Utilized</h2>
-    <p>This project harmonizes multiple distinct datasets to create a unified narrative:</p>
+<!----- Update this when you finalize the datasets --->
+<!-- <div class="card">
+    <h2>Data</h2>
     
     <h4 style="margin-bottom: 5px;">Ocean & Atmospheric Health</h4>
     <ul style="margin-top: 0;">
-        <li>Mean sea surface temperature anomalies</li>
+        <li>Mean sea surface temperature anomalies </li> <a href="https://pacificdatavizchallenge.org/" target="_blank">
         <li>Meteorological monitoring network (disaggregated)</li>
     </ul>
 
@@ -53,5 +48,5 @@
         <li>Power generation (disaggregated)</li>
         <li>Environmental taxes (disaggregated)</li>
     </ul>
-</div>
+</div> -->
 {% endblock %}
