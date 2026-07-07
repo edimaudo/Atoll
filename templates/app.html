@@ -6,31 +6,32 @@
 <div class="app-container">
     <!-- PHASE 1: ESTABLISH BASELINES -->
     <section class="phase-section" id="phase-1">
-        <h2>Phase 1: Establish Baselines</h2>
+        <h2>Country Selection</h2>
         <div class="card">
             <label for="countrySelect"><strong>Select a Pacific Country or Territory:</strong></label>
             <select id="countrySelect" class="form-select" onchange="updateDashboard()" style="width: 100%; max-width: 400px; padding: 10px; margin-top: 10px; font-family: inherit;">
                 <option value="none">-- Choose a Country --</option>
-                <option value="Papua New Guinea" data-flag="🇵🇬" data-pop="10,329,931" data-area="462,840" data-custom="The Huli Wigmen grow their hair for months to craft elaborate ceremonial wigs.">Papua New Guinea</option>
-                <option value="New Zealand" data-flag="🇳🇿" data-pop="5,228,100" data-area="268,021" data-custom="The Haka is a traditional Māori posture dance featuring vigorous movements and stamping of the feet.">New Zealand</option>
+                <option value="American Samoa" data-flag="🇦🇸" data-pop="43,915" data-area="199" data-custom="Fa'a Samoa (The Samoan Way) places immense importance on the extended family and chiefs.">American Samoa</option>
+                <option value="Cook Islands" data-flag="🇨🇰" data-pop="17,044" data-area="236" data-custom="Tivaevae is the highly respected art of making intricate, hand-sewn patchwork quilts as gifts." selected>Cook Islands</option>
                 <option value="Fiji" data-flag="🇫🇯" data-pop="936,376" data-area="18,274" data-custom="Traditional welcomes center on the Kava ceremony, drinking an earthy infusion from a coconut shell.">Fiji</option>
-                <option value="Solomon Islands" data-flag="🇸🇧" data-pop="740,425" data-area="28,400" data-custom="Woven shell money is still actively used for traditional settlements and bride prices.">Solomon Islands</option>
-                <option value="Vanuatu" data-flag="🇻🇺" data-pop="334,506" data-area="12,189" data-custom="Land diving (Naghol) on Pentecost Island is the ancient precursor to modern bungee jumping.">Vanuatu</option>
                 <option value="French Polynesia" data-flag="🇵🇫" data-pop="308,872" data-area="4,167" data-custom="The Heiva i Tahiti is a massive annual traditional dance and sporting festival.">French Polynesia</option>
-                <option value="New Caledonia" data-flag="🇳🇨" data-pop="292,991" data-area="18,576" data-custom="The Kanak custom of 'La Coutume' involves offering crucial gifts like yams or fabric to hosts.">New Caledonia</option>
-                <option value="Samoa" data-flag="🇼🇸" data-pop="225,681" data-area="2,842" data-custom="Pe'a is the deeply traditional, intricate male tattoo covering the body from waist to knees.">Samoa</option>
                 <option value="Guam" data-flag="🇬🇺" data-pop="172,952" data-area="544" data-custom="The Chenchule' is a Chamorro system of social reciprocity involving mutual gifts and assistance.">Guam</option>
                 <option value="Kiribati" data-flag="🇰🇮" data-pop="133,515" data-area="811" data-custom="The Maneaba is the traditional meeting house that dictates the architecture and village life.">Kiribati</option>
-                <option value="Micronesia (FSM)" data-flag="🇫🇲" data-pop="115,224" data-area="702" data-custom="On the island of Yap, giant stone discs called Rai are traditionally used as physical currency.">Micronesia (FSM)</option>
-                <option value="Tonga" data-flag="🇹🇴" data-pop="107,773" data-area="747" data-custom="Wearing a ta'ovala (a woven mat) around the waist is required to show respect in formal settings.">Tonga</option>
-                <option value="Northern Mariana Islands" data-flag="🇲🇵" data-pop="49,796" data-area="464" data-custom="Local fiestas honoring patron saints are major events featuring abundant Chamorro food.">Northern Mariana Islands</option>
-                <option value="American Samoa" data-flag="🇦🇸" data-pop="43,915" data-area="199" data-custom="Fa'a Samoa (The Samoan Way) places immense importance on the extended family and chiefs.">American Samoa</option>
-                <option value="Marshall Islands" data-flag="🇲🇭" data-pop="41,996" data-area="181" data-custom="Kemem celebrates a child's first birthday, historically a major life milestone due to island survival rates.">Marshall Islands</option>
-                <option value="Palau" data-flag="🇵🇼" data-pop="18,058" data-area="459" data-custom="The Bai is a traditional men's meeting house, historically constructed without using nails.">Palau</option>
-                <option value="Cook Islands" data-flag="🇨🇰" data-pop="17,044" data-area="236" data-custom="Tivaevae is the highly respected art of making intricate, hand-sewn patchwork quilts as gifts.">Cook Islands</option>
                 <option value="Nauru" data-flag="🇳🇷" data-pop="12,780" data-area="21" data-custom="Weight lifting has historically been a revered national sport, tying to traditional concepts of physical strength.">Nauru</option>
-                <option value="Wallis and Futuna" data-flag="🇼🇫" data-pop="11,502" data-area="142" data-custom="Traditional royalty remains highly influential, with ceremonial feasts and Kava playing a central role.">Wallis and Futuna</option>
+                <option value="New Caledonia" data-flag="🇳🇨" data-pop="292,991" data-area="18,576" data-custom="The Kanak custom of 'La Coutume' involves offering crucial gifts like yams or fabric to hosts.">New Caledonia</option>
+                <option value="New Zealand" selected data-flag="🇳🇿" data-pop="5,228,100" data-area="268,021" data-custom="The Haka is a traditional Māori posture dance featuring vigorous movements and stamping of the feet.">New Zealand</option>
+                <option value="Northern Mariana Islands" data-flag="🇲🇵" data-pop="49,796" data-area="464" data-custom="Local fiestas honoring patron saints are major events featuring abundant Chamorro food.">Northern Mariana Islands</option>
+                <option value="Marshall Islands" data-flag="🇲🇭" data-pop="41,996" data-area="181" data-custom="Kemem celebrates a child's first birthday, historically a major life milestone due to island survival rates.">Marshall Islands</option>
+                <option value="Micronesia (FSM)" data-flag="🇫🇲" data-pop="115,224" data-area="702" data-custom="On the island of Yap, giant stone discs called Rai are traditionally used as physical currency.">Micronesia (FSM)</option>
+                <option value="Palau" data-flag="🇵🇼" data-pop="18,058" data-area="459" data-custom="The Bai is a traditional men's meeting house, historically constructed without using nails.">Palau</option>
+                <option value="Papua New Guinea" data-flag="🇵🇬" data-pop="10,329,931" data-area="462,840" data-custom="The Huli Wigmen grow their hair for months to craft elaborate ceremonial wigs.">Papua New Guinea</option>
+                <option value="Samoa" data-flag="🇼🇸" data-pop="225,681" data-area="2,842" data-custom="Pe'a is the deeply traditional, intricate male tattoo covering the body from waist to knees.">Samoa</option>
+                <option value="Solomon Islands" data-flag="🇸🇧" data-pop="740,425" data-area="28,400" data-custom="Woven shell money is still actively used for traditional settlements and bride prices.">Solomon Islands</option>
+                <option value="Tonga" data-flag="🇹🇴" data-pop="107,773" data-area="747" data-custom="Wearing a ta'ovala (a woven mat) around the waist is required to show respect in formal settings.">Tonga</option>
                 <option value="Tuvalu" data-flag="🇹🇻" data-pop="11,396" data-area="26" data-custom="The Fatele is a traditional dance performed to the rhythmic beating of a wooden box on festive occasions.">Tuvalu</option>
+                <option value="Vanuatu" data-flag="🇻🇺" data-pop="334,506" data-area="12,189" data-custom="Land diving (Naghol) on Pentecost Island is the ancient precursor to modern bungee jumping.">Vanuatu</option>
+                <option value="Wallis and Futuna" data-flag="🇼🇫" data-pop="11,502" data-area="142" data-custom="Traditional royalty remains highly influential, with ceremonial feasts and Kava playing a central role.">Wallis and Futuna</option>
+                
             </select>
             
             <div id="baseline-stats" style="margin-top: 20px; display: none;">
