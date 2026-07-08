@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from starlette.exceptions import HTTPException as StarletteHTTPException
 # from data import *
 
 
@@ -18,11 +17,9 @@ async def about_page(request: Request):
     """Talks about the challenge and data."""
     return templates.TemplateResponse("about.html", {"request": request})
 
-@app.exception_handler(StarletteHTTPException)
-async def custom_404_handler(request: Request, exc: StarletteHTTPException):
-    if exc.status_code == 404:
-        return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
-    return HTMLResponse(str(exc.detail), status_code=exc.status_code)
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, _exc):
+    return templates.TemplateResponse(request, "404.html", status_code=404)
 
 # @app.get("/app", response_class=HTMLResponse)
 # async def insights(request: Request, country: str = "New Zealand"):
