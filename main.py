@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from data import *
-import plotly.express as px
+# from data import *
+
 
 app = FastAPI(title="Pacific Island & Territories Climate Change")
 templates = Jinja2Templates(directory="templates")
