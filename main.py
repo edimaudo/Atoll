@@ -45,78 +45,78 @@ async def insights(request: Request, country: str = "New Zealand"):
         # Include Plotly JS CDN once on the very first chart loaded
         plots['crop'] = fig_crop.to_html(full_html=False, include_plotlyjs='cdn')
 
-        # 2. Livestock Yield
-        df_live = data.livestock_yield[data.livestock_yield['country'] == country]
-        fig_live = px.bar(df_live, x='year', y='value', title="Livestock Productive Yield")
-        plots['livestock'] = fig_live.to_html(full_html=False, include_plotlyjs=False)
+        # # 2. Livestock Yield
+        # df_live = data.livestock_yield[data.livestock_yield['country'] == country]
+        # fig_live = px.bar(df_live, x='year', y='value', title="Livestock Productive Yield")
+        # plots['livestock'] = fig_live.to_html(full_html=False, include_plotlyjs=False)
 
-        # 3. Meteorological Monitoring Network
-        df_met = data.meterological_monitor[data.meterological_monitor['country'] == country]
-        fig_met = px.line(df_met, x='year', y='value', title="Meteorological Station Monitoring Infrastructure")
-        plots['meteo'] = fig_met.to_html(full_html=False, include_plotlyjs=False)
+        # # 3. Meteorological Monitoring Network
+        # df_met = data.meterological_monitor[data.meterological_monitor['country'] == country]
+        # fig_met = px.line(df_met, x='year', y='value', title="Meteorological Station Monitoring Infrastructure")
+        # plots['meteo'] = fig_met.to_html(full_html=False, include_plotlyjs=False)
 
-        # Dynamic placeholder text for Agro-Ecosystems
-        insights_text['agro'] = (
-            f"Aggregated agricultural observations for {country} demonstrate how local production capacity "
-            f"correlates with regional monitoring networks. Shifts in crop indices and livestock yield values "
-            f"reflect immediate baseline interactions with shifting environmental variables."
-        )
+        # # Dynamic placeholder text for Agro-Ecosystems
+        # insights_text['agro'] = (
+        #     f"Aggregated agricultural observations for {country} demonstrate how local production capacity "
+        #     f"correlates with regional monitoring networks. Shifts in crop indices and livestock yield values "
+        #     f"reflect immediate baseline interactions with shifting environmental variables."
+        # )
 
-        # ==========================================
-        # CATEGORY 2: OCEAN HEALTH & CLIMATE ANOMALIES
-        # ==========================================
+        # # ==========================================
+        # # CATEGORY 2: OCEAN HEALTH & CLIMATE ANOMALIES
+        # # ==========================================
         
-        # 4. Mean Sea Surface Temperature Anomaly
-        df_sst = data.mean_sea_surface_temp_anomaly[data.mean_sea_surface_temp_anomaly['country'] == country]
-        fig_sst = px.line(df_sst, x='year', y='value', title="Mean Sea Surface Temperature Anomaly")
-        plots['sea_temp'] = fig_sst.to_html(full_html=False, include_plotlyjs=False)
+        # # 4. Mean Sea Surface Temperature Anomaly
+        # df_sst = data.mean_sea_surface_temp_anomaly[data.mean_sea_surface_temp_anomaly['country'] == country]
+        # fig_sst = px.line(df_sst, x='year', y='value', title="Mean Sea Surface Temperature Anomaly")
+        # plots['sea_temp'] = fig_sst.to_html(full_html=False, include_plotlyjs=False)
 
-        # 5. Mean Surface Temperature Anomaly
-        df_surf = data.mean_surface_temp_anomaly[data.mean_surface_temp_anomaly['country'] == country]
-        fig_surf = px.line(df_surf, x='year', y='value', title="Mean Land Surface Temperature Anomaly")
-        plots['surface_temp'] = fig_surf.to_html(full_html=False, include_plotlyjs=False)
+        # # 5. Mean Surface Temperature Anomaly
+        # df_surf = data.mean_surface_temp_anomaly[data.mean_surface_temp_anomaly['country'] == country]
+        # fig_surf = px.line(df_surf, x='year', y='value', title="Mean Land Surface Temperature Anomaly")
+        # plots['surface_temp'] = fig_surf.to_html(full_html=False, include_plotlyjs=False)
 
-        # 6. Rainfall Anomaly
-        df_rain = data.rainfall_anomaly[data.rainfall_anomaly['country'] == country]
-        fig_rain = px.bar(df_rain, x='year', y='value', title="Precipitation & Rainfall Anomalies")
-        plots['rainfall'] = fig_rain.to_html(full_html=False, include_plotlyjs=False)
+        # # 6. Rainfall Anomaly
+        # df_rain = data.rainfall_anomaly[data.rainfall_anomaly['country'] == country]
+        # fig_rain = px.bar(df_rain, x='year', y='value', title="Precipitation & Rainfall Anomalies")
+        # plots['rainfall'] = fig_rain.to_html(full_html=False, include_plotlyjs=False)
 
-        # 7. Sea Level Anomaly
-        df_sea = data.sea_level_anomaly[data.sea_level_anomaly['country'] == country]
-        fig_sea = px.line(df_sea, x='year', y='value', title="Sea Level Absolute Anomalies")
-        plots['sea_level'] = fig_sea.to_html(full_html=False, include_plotlyjs=False)
+        # # 7. Sea Level Anomaly
+        # df_sea = data.sea_level_anomaly[data.sea_level_anomaly['country'] == country]
+        # fig_sea = px.line(df_sea, x='year', y='value', title="Sea Level Absolute Anomalies")
+        # plots['sea_level'] = fig_sea.to_html(full_html=False, include_plotlyjs=False)
 
-        # Dynamic placeholder text for Ocean Health
-        insights_text['ocean'] = (
-            f"Oceanic indicators for {country} provide an assessment of marine variance. "
-            f"Sea surface deviations alongside localized sea level trends show the direct exposure "
-            f"this territory faces from macroclimate fluctuations."
-        )
+        # # Dynamic placeholder text for Ocean Health
+        # insights_text['ocean'] = (
+        #     f"Oceanic indicators for {country} provide an assessment of marine variance. "
+        #     f"Sea surface deviations alongside localized sea level trends show the direct exposure "
+        #     f"this territory faces from macroclimate fluctuations."
+        # )
 
-        # ==========================================
-        # CATEGORY 3: SOCIO-ECONOMICS & EMISSIONS
-        # ==========================================
+        # # ==========================================
+        # # CATEGORY 3: SOCIO-ECONOMICS & EMISSIONS
+        # # ==========================================
         
-        # 8. Environmental Taxes
-        df_tax = data.environmental_tax[data.environmental_tax['country'] == country]
-        fig_tax = px.area(df_tax, x='year', y='value', title="Environmental Taxes & Revenue Structures")
-        plots['tax'] = fig_tax.to_html(full_html=False, include_plotlyjs=False)
+        # # 8. Environmental Taxes
+        # df_tax = data.environmental_tax[data.environmental_tax['country'] == country]
+        # fig_tax = px.area(df_tax, x='year', y='value', title="Environmental Taxes & Revenue Structures")
+        # plots['tax'] = fig_tax.to_html(full_html=False, include_plotlyjs=False)
 
-        # 9. Greenhouse Gas Emissions
-        # Treating greenhouse gas emissions per capita as a vital socio-economic development byproduct
-        df_ghg = data.greenhouse_gas_emissions[data.greenhouse_gas_emissions['country'] == country]
-        fig_ghg = px.scatter(df_ghg, x='year', y='value', title="Greenhouse Gas Emissions per Capita")
-        plots['ghg'] = fig_ghg.to_html(full_html=False, include_plotlyjs=False)
+        # # 9. Greenhouse Gas Emissions
+        # # Treating greenhouse gas emissions per capita as a vital socio-economic development byproduct
+        # df_ghg = data.greenhouse_gas_emissions[data.greenhouse_gas_emissions['country'] == country]
+        # fig_ghg = px.scatter(df_ghg, x='year', y='value', title="Greenhouse Gas Emissions per Capita")
+        # plots['ghg'] = fig_ghg.to_html(full_html=False, include_plotlyjs=False)
 
-        # 10. Power Generation
-        df_pow = data.power_generation[data.power_generation['country'] == country]
-        fig_pow = px.bar(df_pow, x='year', y='value', color='source' if 'source' in df_pow.columns else None, title="Power Generation Matrix Profile")
-        plots['power'] = fig_pow.to_html(full_html=False, include_plotlyjs=False)
+        # # 10. Power Generation
+        # df_pow = data.power_generation[data.power_generation['country'] == country]
+        # fig_pow = px.bar(df_pow, x='year', y='value', color='source' if 'source' in df_pow.columns else None, title="Power Generation Matrix Profile")
+        # plots['power'] = fig_pow.to_html(full_html=False, include_plotlyjs=False)
 
-        # 11. Tourist Arrivals
-        df_tour = data.tourism_arrival[data.tourism_arrival['country'] == country]
-        fig_tour = px.bar(df_tour, x='year', y='value', title="International Tourist Arrival Volume")
-        plots['tourism'] = fig_tour.to_html(full_html=False, include_plotlyjs=False)
+        # # 11. Tourist Arrivals
+        # df_tour = data.tourism_arrival[data.tourism_arrival['country'] == country]
+        # fig_tour = px.bar(df_tour, x='year', y='value', title="International Tourist Arrival Volume")
+        # plots['tourism'] = fig_tour.to_html(full_html=False, include_plotlyjs=False)
 
         # Dynamic placeholder text for Socio-Economics
         insights_text['socio'] = (
