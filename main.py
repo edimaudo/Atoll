@@ -24,11 +24,11 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
         return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
     return HTMLResponse(str(exc.detail), status_code=exc.status_code)
 
-@app.get("/app", response_class=HTMLResponse)
-async def insights(request: Request, country: str = "New Zealand"):
-    # async def app_page(request: Request):
+# @app.get("/app", response_class=HTMLResponse)
+# async def insights(request: Request, country: str = "New Zealand"):
+#     # async def app_page(request: Request):
 
-    return templates.TemplateResponse("app.html", {"request": request})
+#     return templates.TemplateResponse("app.html", {"request": request})
     # plots = {}
     # insights_text = {}
 
