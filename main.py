@@ -31,19 +31,22 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
 
 @app.get("/app", response_class=HTMLResponse)
 async def insights(request: Request, country: str = "New Zealand"):
-    plots = {}
-    insights_text = {}
+    # async def app_page(request: Request):
 
-    try:
-        # ==========================================
-        # CATEGORY 1: AGRO-ECOSYSTEMS & FOOD SECURITY
-        # ==========================================
+    return templates.TemplateResponse("app.html", {"request": request})
+    # plots = {}
+    # insights_text = {}
+
+    # try:
+    #     # ==========================================
+    #     # CATEGORY 1: AGRO-ECOSYSTEMS & FOOD SECURITY
+    #     # ==========================================
         
-        # 1. Crop Yield
-        df_crop = data.crop_yield[data.crop_yield['country'] == country]
-        fig_crop = px.bar(df_crop, x='year', y='value', title="Crop Yield Trends (Disaggregated)")
-        # Include Plotly JS CDN once on the very first chart loaded
-        plots['crop'] = fig_crop.to_html(full_html=False, include_plotlyjs='cdn')
+    #     # 1. Crop Yield
+    #     df_crop = data.crop_yield[data.crop_yield['country'] == country]
+    #     fig_crop = px.bar(df_crop, x='year', y='value', title="Crop Yield Trends (Disaggregated)")
+    #     # Include Plotly JS CDN once on the very first chart loaded
+    #     plots['crop'] = fig_crop.to_html(full_html=False, include_plotlyjs='cdn')
 
         # # 2. Livestock Yield
         # df_live = data.livestock_yield[data.livestock_yield['country'] == country]
@@ -119,24 +122,24 @@ async def insights(request: Request, country: str = "New Zealand"):
         # plots['tourism'] = fig_tour.to_html(full_html=False, include_plotlyjs=False)
 
         # Dynamic placeholder text for Socio-Economics
-        insights_text['socio'] = (
-            f"Socio-economic dimensions for {country} detail the intersection of market drivers and fiscal "
-            f"safeguards. Resource inputs via power grids and tourism streams align against regulatory frameworks "
-            f"like national environmental tax collections."
-        )
+    #     insights_text['socio'] = (
+    #         f"Socio-economic dimensions for {country} detail the intersection of market drivers and fiscal "
+    #         f"safeguards. Resource inputs via power grids and tourism streams align against regulatory frameworks "
+    #         f"like national environmental tax collections."
+    #     )
 
-    except Exception as e:
-        print(f"Error processing visual modules: {str(e)}")
+    # except Exception as e:
+    #     print(f"Error processing visual modules: {str(e)}")
 
-    return templates.TemplateResponse(
-        "app.html", 
-        {
-            "request": request, 
-            "selected_country": country, 
-            "plots": plots,
-            "insights_text": insights_text
-        }
-    )
+    # return templates.TemplateResponse(
+    #     "app.html", 
+    #     {
+    #         "request": request, 
+    #         "selected_country": country, 
+    #         "plots": plots,
+    #         "insights_text": insights_text
+    #     }
+    # )
 
 if __name__ == '__main__':
     import uvicorn
