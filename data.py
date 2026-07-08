@@ -16,8 +16,6 @@ rainfall_anomaly = pd.read_csv(path + "Rainfall anomalies.csv")
 sea_level_anomaly = pd.read_csv(path + "Sea level anomalies.csv")
 tourism_arrival = pd.read_csv(path + "Tourist arrivals (disaggregated).csv")
 
-# Set up dataset
-
 # Mean surface temperature data
 
 # 
