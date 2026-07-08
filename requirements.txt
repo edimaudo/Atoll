@@ -1,13 +1,13 @@
 # Core Backend Framework
-fastapi>=0.103.2
-uvicorn>=0.23.2
+fastapi==0.103.2
+uvicorn==0.23.2
 
 # Templating Engine
-jinja2>=3.1.2
+jinja2==3.1.2
 
 # Data Processing & Visualization
 pandas>=2.1.1
 plotly>=5.17.0
 
 # Server / File Support
-python-multipart>=0.0.6
+python-multipart==0.0.6
