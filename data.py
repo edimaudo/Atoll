@@ -1,7 +1,15 @@
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+import ruptures as rpt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from statsmodels.tsa.stattools import grangercausalitytests
+import xgboost as xgb
+import json
+
+
 
 # Load Datasets
 path = "/data/"
@@ -31,8 +39,42 @@ datasets = [
     tourist_arrivals
 ]
 
+
+COUNTRY_LIST = [
+    'American Samoa', 'Cook Islands', 'Fiji', 'French Polynesia', 'Guam',
+    'Kiribati', 'Marshall Islands', 'Micronesia, Federated State of', 'Nauru',
+    'New Caledonia', 'Niue', 'Northern Mariana Islands', 'Palau', 'Papua New Guinea',
+    'Pitcairn', 'Samoa', 'Solomon Islands', 'Tokelau', 'Tonga', 'Tuvalu',
+    'Vanuatu', 'Wallis and Futuna'
+]
+
+PACIFIC_COORDS = {
+    'American Samoa': {'code': 'AS', 'lat': -14.2710, 'lon': -170.1320},
+    'Cook Islands': {'code': 'CK', 'lat': -21.2360, 'lon': -159.7770},
+    'Fiji': {'code': 'FJ', 'lat': -17.7134, 'lon': 178.0650},
+    'French Polynesia': {'code': 'PF', 'lat': -17.6797, 'lon': -149.4068},
+    'Guam': {'code': 'GU', 'lat': 13.4443, 'lon': 144.7937},
+    'Kiribati': {'code': 'KI', 'lat': 1.8360, 'lon': -157.3660},
+    'Marshall Islands': {'code': 'MH', 'lat': 7.1315, 'lon': 171.1845},
+    'Micronesia, Federated State of': {'code': 'FM', 'lat': 7.4250, 'lon': 150.5500},
+    'Nauru': {'code': 'NR', 'lat': -0.5228, 'lon': 166.9315},
+    'New Caledonia': {'code': 'NC', 'lat': -20.9043, 'lon': 165.6180},
+    'Niue': {'code': 'NU', 'lat': -19.0544, 'lon': -169.8672},
+    'Northern Mariana Islands': {'code': 'MP', 'lat': 15.0979, 'lon': 145.6739},
+    'Palau': {'code': 'PW', 'lat': 7.5149, 'lon': 134.5825},
+    'Papua New Guinea': {'code': 'PG', 'lat': -6.3149, 'lon': 143.9555},
+    'Pitcairn': {'code': 'PN', 'lat': -25.0667, 'lon': -130.1000},
+    'Samoa': {'code': 'WS', 'lat': -13.7590, 'lon': -172.1046},
+    'Solomon Islands': {'code': 'SB', 'lat': -9.6457, 'lon': 160.1562},
+    'Tokelau': {'code': 'TK', 'lat': -9.2000, 'lon': -171.8480},
+    'Tonga': {'code': 'TO', 'lat': -21.1789, 'lon': -175.1982},
+    'Tuvalu': {'code': 'TV', 'lat': -8.5146, 'lon': 179.1940},
+    'Vanuatu': {'code': 'VU', 'lat': -15.3767, 'lon': 166.9592},
+    'Wallis and Futuna': {'code': 'WF', 'lat': -13.7687, 'lon': -177.1560}
+}
+
+
 # Data clean up
-all_countries = set()
 
 for i, df in enumerate(datasets):
     # Rename columns for all datasets
