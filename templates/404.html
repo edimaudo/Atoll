@@ -1,14 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}404 Not Found | Atoll{% endblock %}
+{% block title %}Page not found — Atoll{% endblock %}
 
 {% block content %}
-<div style="text-align: center; padding: 100px 20px;">
-    <h1 style="color: var(--primary-color); font-size: 4rem; margin-bottom: 10px;">404</h1>
-    <h2 style="margin-bottom: 20px;">Page Not Found</h2>
-    <p style="font-size: 1.2rem; margin-bottom: 30px;">
-        It looks like you've drifted off the map. The data endpoint you are looking for does not exist in the <strong>Atoll</strong> system.
-    </p>
-    <a href="/" class="btn-cta">Return to Home Baseline</a>
+<div class="error-page">
+    <h1>404</h1>
+    <h2>This chart doesn't exist.</h2>
+    <p>The page you're looking for isn't part of Atoll. Head back and pick a country to explore.</p>
+    <a href="/app" class="btn-cta">Go to the app →</a>
 </div>
 {% endblock %}

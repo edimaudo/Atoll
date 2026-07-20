@@ -1,146 +1,108 @@
 {% extends "base.html" %}
 
+{% block title %}{{ selected_country }} — Atoll{% endblock %}
+
 {% block content %}
-{% set country_metadata = {
-    "American Samoa": {"flag": "🇦🇸", "pop": "43,915", "area": "199", "custom": "Fa'a Samoa (The Samoan Way) places immense importance on the extended family and chiefs."},
-    "Cook Islands": {"flag": "🇨🇰", "pop": "17,044", "area": "236", "custom": "Tivaevae is the highly respected art of making intricate, hand-sewn patchwork quilts as gifts."},
-    "Fiji": {"flag": "🇫🇯", "pop": "936,376", "area": "18,274", "custom": "Traditional welcomes center on the Kava ceremony, drinking an earthy infusion from a coconut shell."},
-    "French Polynesia": {"flag": "🇵🇫", "pop": "308,872", "area": "4,167", "custom": "The Heiva i Tahiti is a massive annual traditional dance and sporting festival."},
-    "Guam": {"flag": "🇬🇺", "pop": "172,952", "area": "544", "custom": "The Chenchule' is a Chamorro system of social reciprocity involving mutual gifts and assistance."},
-    "Kiribati": {"flag": "🇰🇮", "pop": "133,515", "area": "811", "custom": "The Maneaba is the traditional meeting house that dictates the architecture and village life."},
-    "Nauru": {"flag": "🇳🇷", "pop": "12,780", "area": "21", "custom": "Weight lifting has historically been a revered national sport, tying to traditional concepts of physical strength."},
-    "New Caledonia": {"flag": "🇳🇨", "pop": "292,991", "area": "18,576", "custom": "The Kanak custom of 'La Coutume' involves offering crucial gifts like yams or fabric to hosts."},
-    "New Zealand": {"flag": "🇳🇿", "pop": "5,228,100", "area": "268,021", "custom": "The Haka is a traditional Māori posture dance featuring vigorous movements and stamping of the feet."},
-    "Niue": {"flag": "🇳🇺", "pop": "1,681", "area": "261", "custom": "Tāoga Niue represents the preservation of the island's unique language, authority, and traditional fishing ethos."},
-    "Northern Mariana Islands": {"flag": "🇲🇵", "pop": "49,796", "area": "464", "custom": "Local fiestas honoring patron saints are major events featuring abundant Chamorro food."},
-    "Marshall Islands": {"flag": "🇲🇭", "pop": "41,996", "area": "181", "custom": "Kemem celebrates a child's first birthday, historically a major life milestone due to island survival rates."},
-    "Micronesia (FSM)": {"flag": "🇫🇲", "pop": "115,224", "area": "702", "custom": "On the island of Yap, giant stone discs called Rai are traditionally used as physical currency."},
-    "Palau": {"flag": "🇵🇼", "pop": "18,058", "area": "459", "custom": "The Bai is a traditional men's meeting house, historically constructed without using nails."},
-    "Papua New Guinea": {"flag": "🇵🇬", "pop": "10,329,931", "area": "462,840", "custom": "The Huli Wigmen grow their hair for months to craft elaborate ceremonial wigs."},
-    "Pitcairn": {"flag": "🇵🇳", "pop": "47", "area": "47", "custom": "Culture is deeply tied to the historical legacy of the Bounty mutineers and their Tahitian companions, speaking the unique Pitkern language."},
-    "Samoa": {"flag": "🇼🇸", "pop": "225,681", "area": "2,842", "custom": "Pe'a is the deeply traditional, intricate male tattoo covering the body from waist to knees."},
-    "Solomon Islands": {"flag": "🇸🇧", "pop": "740,425", "area": "28,400", "custom": "Woven shell money is still actively used for traditional settlements and bride prices."},
-    "Tokelau": {"flag": "🇹🇰", "pop": "1,500", "area": "10", "custom": "The Inati system enforces a strict community practice where all resources and fish catches are divided equally among residents."},
-    "Tonga": {"flag": "🇹🇴", "pop": "107,773", "area": "747", "custom": "Wearing a ta'ovala (a woven mat) around the waist is required to show respect in formal settings."},
-    "Tuvalu": {"flag": "🇹🇻", "pop": "11,396", "area": "26", "custom": "The Fatele is a traditional dance performed to the rhythmic beating of a wooden box on festive occasions."},
-    "Vanuatu": {"flag": "🇻🇺", "pop": "334,506", "area": "12,189", "custom": "Land diving (Naghol) on Pentecost Island is the ancient precursor to modern bungee jumping."},
-    "Wallis and Futuna": {"flag": "🇼🇫", "pop": "11,502", "area": "142", "custom": "Traditional royalty remains highly influential, with ceremonial feasts and Kava playing a central role."}
-} %}
 
-
-<div class="app-container" style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: system-ui, -apple-system, sans-serif;">
-    
-    <section class="phase-section" id="selection-phase">
-        <h2>Country Overview</h2>
-        <div class="card" style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <form action="/app" method="GET">
-                <label for="countrySelect" style="display: block; margin-bottom: 8px;"><strong>Select Region or Territory:</strong></label>
-                <select name="country" id="countrySelect" class="form-select" onchange="this.form.submit()" style="width: 100%; max-width: 400px; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
-                    {% for name in country_metadata.keys() %}
-                        <option value="{{ name }}" {% if selected_country == name %}selected{% endif %}>{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-
-            {% set active_info = country_metadata[selected_country] %}
-            <div id="baseline-stats" style="margin-top: 30px;">
-                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px;">
-                    {{ active_info.flag }} {{ selected_country }} Overview
-                </h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px;">
-                    <div style="background: #ffffff; padding: 15px; border-radius: 6px; border: 1px solid #eee;">
-                        <strong style="color: #555;">Population:</strong>
-                        <p style="font-size: 1.2rem; margin: 5px 0 0 0;">{{ active_info.pop }}</p>
-                    </div>
-                    <div style="background: #ffffff; padding: 15px; border-radius: 6px; border: 1px solid #eee;">
-                        <strong style="color: #555;">Land Area:</strong>
-                        <p style="font-size: 1.2rem; margin: 5px 0 0 0;">{{ active_info.area }} km²</p>
-                    </div>
-                </div>
-                <div style="margin-top: 20px; padding: 15px; background: #eef2f5; border-radius: 6px; border-left: 5px solid #0056b3;">
-                    <strong style="color: #333;">Cultural Context & Customs:</strong>
-                    <p style="margin: 8px 0 0 0; line-height: 1.5;">{{ active_info.custom }}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- {% if plots and insights_text %}
-        
-        <section class="category-section" style="margin-top: 50px; border-top: 3px solid #28a745; padding-top: 20px;">
-            <h2 style="color: #28a745; margin-bottom: 10px;">Chapter 1: Agro-Ecosystems & Food Security</h2>
-            
-            <div class="insight-narrative-box" style="background: #f4faf6; border-left: 5px solid #28a745; padding: 15px; margin-bottom: 25px; border-radius: 4px; line-height: 1.6;">
-                <strong>Analytical Commentary:</strong>
-                <p style="margin: 5px 0 0 0; color: #333;">{{ insights_text.agro }}</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.crop | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.livestock | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.meteo | safe }}
-                </div>
-            </div>
-        </section>
-
-        <section class="category-section" style="margin-top: 60px; border-top: 3px solid #17a2b8; padding-top: 20px;">
-            <h2 style="color: #17a2b8; margin-bottom: 10px;">Chapter 2: Ocean Health & Climate Anomalies</h2>
-            
-            <div class="insight-narrative-box" style="background: #f0fafd; border-left: 5px solid #17a2b8; padding: 15px; margin-bottom: 25px; border-radius: 4px; line-height: 1.6;">
-                <strong>Analytical Commentary:</strong>
-                <p style="margin: 5px 0 0 0; color: #333;">{{ insights_text.ocean }}</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.sea_temp | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.surface_temp | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.rainfall | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.sea_level | safe }}
-                </div>
-            </div>
-        </section>
-
-        <section class="category-section" style="margin-top: 60px; border-top: 3px solid #6c757d; padding-top: 20px;">
-            <h2 style="color: #6c757d; margin-bottom: 10px;">Chapter 3: Socio-Economics & System Resource Flows</h2>
-            
-            <div class="insight-narrative-box" style="background: #fdfdfd; border-left: 5px solid #6c757d; padding: 15px; margin-bottom: 25px; border-radius: 4px; line-height: 1.6; border: 1px solid #ddd; border-left-width: 5px;">
-                <strong>Analytical Commentary:</strong>
-                <p style="margin: 5px 0 0 0; color: #333;">{{ insights_text.socio }}</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.tax | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.ghg | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.power | safe }}
-                </div>
-                <div class="card viz-container" style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    {{ plots.tourism | safe }}
-                </div>
-            </div>
-        </section>
-
-    {% else %}
-        <div style="margin-top: 40px; padding: 20px; background: #fee; color: #c00; border-radius: 5px; border: 1px solid #fcc;">
-            <p style="margin: 0;"><strong>System Routing Notice:</strong> Core visualization structural payload arrays are missing or dropped during rendering.</p>
-        </div>
-    {% endif %} -->
-
+<div class="country-picker-bar">
+    <form class="picker-form" action="/app" method="GET">
+        <label for="countrySelect">Country / territory</label>
+        <select name="country" id="countrySelect" onchange="this.form.submit()">
+            {% for name in country_names %}
+                <option value="{{ name }}" {% if name == selected_country %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+        {% if compare_country %}<input type="hidden" name="compare" value="{{ compare_country }}">{% endif %}
+    </form>
 </div>
+
+<div class="country-header">
+    <div>
+        <h1>{{ country_data.meta.flag }} {{ selected_country }}</h1>
+        <div class="fact-row">
+            <div><span class="eyebrow">Population</span><div class="data-figure">{{ country_data.meta.population }}</div></div>
+            <div><span class="eyebrow">Land area</span><div class="data-figure">{{ country_data.meta.area_km2 }} km²</div></div>
+        </div>
+        <div class="bridge-note">{{ country_data.meta.custom }}</div>
+    </div>
+    <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+         role="img" aria-label="Map showing the location of {{ selected_country }} in the Pacific Ocean">
+        <rect x="0" y="0" width="100" height="100" fill="var(--lagoon-light)" opacity="0.25" />
+        {% for name, pos in all_country_positions.items() %}
+            {% if name != selected_country and name != compare_country %}
+            <circle cx="{{ pos.x_pct }}" cy="{{ pos.y_pct }}" r="1.1" fill="var(--ink-soft)" opacity="0.4" />
+            {% endif %}
+        {% endfor %}
+        {% if compare_country %}
+        <circle cx="{{ all_country_positions[compare_country].x_pct }}" cy="{{ all_country_positions[compare_country].y_pct }}" r="2.2" fill="var(--current)" stroke="var(--card-bg)" stroke-width="0.6" />
+        {% endif %}
+        <circle cx="{{ country_data.meta.x_pct }}" cy="{{ country_data.meta.y_pct }}" r="2.6" fill="var(--coral)" stroke="var(--card-bg)" stroke-width="0.6" />
+    </svg>
+</div>
+
+<div class="compare-bar">
+    <form action="/app" method="GET">
+        <input type="hidden" name="country" value="{{ selected_country }}">
+        <label for="compareSelect" class="eyebrow">Compare Country</label>
+        <select name="compare" id="compareSelect" onchange="this.form.submit()">
+            <option value="">— none —</option>
+            {% for name in country_names %}
+                {% if name != selected_country %}
+                <option value="{{ name }}" {% if name == compare_country %}selected{% endif %}>{{ name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% for chapter_key, chapter in chapters.items() %}
+<section class="pillar" id="pillar-{{ chapter_key }}">
+    <div class="pillar-narrative">
+        <span class="eyebrow">{{ chapter.title }}</span>
+        <h2>{{ chapter.title }}</h2>
+    </div>
+    <div class="chart-grid">
+        {% for indicator_key in chapter.indicators %}
+            {% if indicator_key in country_data.indicators %}
+            {% set ind = country_data.indicators[indicator_key] %}
+            <div class="chart-card" data-charttype="line">
+                <h3>{{ ind.label }}</h3>
+                <div id="chart-{{ indicator_key }}" class="plotly-chart" data-indicator="{{ indicator_key }}"></div>
+                <div class="legend-key">
+                    <span class="k-primary">{{ selected_country }}</span>
+                    <span class="k-median">Regional median</span>
+                    {% if compare_country %}<span class="k-compare">{{ compare_country }}</span>{% endif %}
+                </div>
+                <p class="chart-insight">{{ insights[indicator_key] }}</p>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+<section class="action-steps">
+    <div class="action-steps-inner">
+        <span class="eyebrow">Action steps</span>
+        <h2>Trend Summary for {{ selected_country }}{% if compare_country %} vs. {{ compare_country }}{% endif %}</h2>
+        <div class="action-card" id="trend-summary-markdown" data-raw="{{ action_summary | e }}"></div>
+
+        <div class="climate-action-block">
+            <h3>Climate Action Steps</h3>
+            <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
+            <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button>
+            <div id="actionPlanStatus" class="action-plan-status"></div>
+            <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
+        </div>
+    </div>
+</section>
+
+<script id="chart-payload" type="application/json">{{ chart_payload | tojson }}</script>
+<script id="action-context" type="application/json">{{ {"country": selected_country, "summary": action_summary} | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/vendor/plotly.min.js"></script>
+<script src="/static/vendor/marked.min.js"></script>
+<script src="/static/js/app.js"></script>
 {% endblock %}

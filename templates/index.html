@@ -1,38 +1,91 @@
 {% extends "base.html" %}
 
-{% block title %}Home {% endblock %}
+{% block title %}Atoll — Understanding the Climate Change Crisis in the Pacific{% endblock %}
 
 {% block content %}
-<section style="text-align: center; padding: 60px 20px;">
-    <h1 style="color: var(--primary-color); font-size: 3rem; margin-bottom: 20px;">
-         Understanding the Climate Change Crisis in the Pacific Islands and Territories
-    </h1>
-    <p style="font-size: 1.25rem; max-width: 800px; margin: 0 auto 30px auto;">
-        The theme of the <a href="https://pacificdatavizchallenge.org/" target="_blank">2026 Pacific Dataviz Challenge</a> is <b>"Climate Change"</b><br>
-        This application transforms fragmented environmental and socio-economic data into a seamless narrative.
+<section class="hero">
+    <h1>Understanding the Climate Change Crisis in the Pacific Islands and Territories</h1>
+    <p class="lede">
+        The theme of the <a href="https://pacificdatavizchallenge.org/" target="_blank" rel="noopener">2026 Pacific Dataviz Challenge</a>
+        is "Climate Change." This application transforms fragmented environmental and socio-economic
+        data into a seamless narrative across {{ territory_count }} Pacific countries and territories.
     </p>
-    <a href="/app" class="btn-cta">Explore Insights</a>
+    <a href="/app" class="btn-cta">Explore Insights →</a>
+
+    <div class="headline-stat">
+        <p style="margin: 0 0 0.4rem;">Did you know?</p>
+        <div class="stat-value">+{{ headline_stat.change }}{{ headline_stat.unit }}</div>
+        <p style="margin: 0.4rem 0 0; color: var(--lagoon-light);">
+            Between {{ headline_stat.start_year }} and {{ headline_stat.end_year }}, the {{ headline_stat.label.lower() }}
+            across the Pacific has changed by {{ headline_stat.change }}{{ headline_stat.unit }} — from
+            {{ headline_stat.start_value }}{{ headline_stat.unit }} to {{ headline_stat.end_value }}{{ headline_stat.unit }}.
+        </p>
+    </div>
 </section>
 
-<section style="margin-top: 40px;">
-    <h2 style="text-align: center; margin-bottom: 30px;">How It Works</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
-        
-        <div class="card">
-            <h3 style="color: var(--primary-color);">Selection</h3>
-            <p>Select a Pacific Island or Territory to establish geographic and demographic context before diving into the data.</p>
+<section class="section">
+    <h2>How It Works</h2>
+    <div class="how-it-works">
+        <div class="how-card">
+            <span class="eyebrow">Selection</span>
+            <p>Select a Pacific Island or Territory to establish geographic and demographic context
+            before diving into the data.</p>
         </div>
-
-        <div class="card">
-            <h3 style="color: var(--primary-color);">Key Themes</h3>
-            <p>The analysis is organized into three pillars (Agro-Ecosystems, Ocean Health, and Socio-Economics).</p>
+        <div class="how-card">
+            <span class="eyebrow">Key Themes</span>
+            <p>The analysis is organized into three pillars — Land &amp; Food, Ocean &amp; Atmosphere,
+            and People &amp; Economy.</p>
         </div>
-
-        <div class="card">
-            <h3 style="color: var(--primary-color);">Strategic Action</h3>
-            <p>Clear data-driven adaptation steps are provided.</p>
+        <div class="how-card">
+            <span class="eyebrow">Compare</span>
+            <p>Add a second country or territory to any story to see how two places' trends actually differ.</p>
         </div>
-
+        <div class="how-card">
+            <span class="eyebrow">Strategic Action</span>
+            <p>Each country page closes with the indicator changing fastest for that place — a clear,
+            data-driven signal for where to look next.</p>
+        </div>
     </div>
+</section>
+
+<section class="section">
+    <h2>The Challenge</h2>
+    <p>
+        Pacific Islands &amp; Territories are uniquely vulnerable to the impacts of climate change.
+        From rising sea surface temperatures disrupting local marine ecosystems to shifting weather
+        patterns threatening agricultural yields, the consequences are multi-faceted.
+    </p>
+    <p>
+        One primary obstacle for policymakers and stakeholders is making sense of open source data
+        to better understand the impact. There is an urgent need to translate abstract data into
+        tangible, localized narratives that clearly illustrate vulnerabilities and pathways to resilience.
+    </p>
+    <p>
+        This application is built to answer that challenge — pairing open data visualization with
+        storytelling to bridge the gap between raw datasets and public comprehension of climate
+        insights, using open source technology (FastAPI, Jinja2, Plotly).
+    </p>
+</section>
+
+<section class="section">
+    <h2>The Data</h2>
+    <p>Every figure in this app comes from the Secretariat of the Pacific Community's public climate
+    and development statistics, re-aggregated to the country level.</p>
+    <table class="dataset-table">
+        <thead>
+            <tr><th>Dataset</th><th>Pillar</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Mean surface temperature anomalies</td><td>Ocean &amp; Atmosphere</td></tr>
+            <tr><td>Mean sea surface temperature anomalies</td><td>Ocean &amp; Atmosphere</td></tr>
+            <tr><td>Rainfall anomalies</td><td>Land &amp; Food</td></tr>
+            <tr><td>Crop yield (disaggregated)</td><td>Land &amp; Food</td></tr>
+            <tr><td>Tourist arrivals (disaggregated)</td><td>People &amp; Economy</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="cta-band">
+    <a href="/app" class="btn-cta">Explore Insights →</a>
 </section>
 {% endblock %}
