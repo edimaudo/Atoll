@@ -125,6 +125,9 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
     }
 
     power_source_insight = store_v2.power_source_insight(country, country_data["power_sources"])
+    compare_power_source_insight = (
+        store_v2.power_source_insight(compare, compare_data["power_sources"]) if compare_data else None
+    )
     sankey_insight = store_v2.sankey_insight(country, country_data["power_sankey"])
     compare_sankey_insight = store_v2.sankey_insight(compare, compare_data["power_sankey"]) if compare_data else None
 
@@ -166,6 +169,7 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
             "compare_ranked_insights": compare_ranked_insights,
             "tail_risk_insights": tail_risk_insights,
             "power_source_insight": power_source_insight,
+            "compare_power_source_insight": compare_power_source_insight,
             "sankey_insight": sankey_insight,
             "compare_sankey_insight": compare_sankey_insight,
             "chart_payload": chart_payload,

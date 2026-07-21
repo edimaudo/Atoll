@@ -450,7 +450,16 @@ main { min-height: 70vh; }
     color: var(--amber);
 }
 
-/* ---------- per-chart insight ---------- */
+/* ---------- chart subtitle: how to read this chart (compare-mode charts) ---------- */
+
+.chart-subtitle {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 0.2rem 0 1rem;
+    line-height: 1.4;
+}
+
+/* ---------- per-chart insight / "Takeaway" callout ---------- */
 
 .chart-insight {
     font-size: 0.92rem;
@@ -459,6 +468,30 @@ main { min-height: 70vh; }
     padding-top: 0.8rem;
     border-top: 1px solid var(--border);
 }
+
+.chart-insight .takeaway-label {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+/* ---------- country-panel header (compare-mode, non-line charts) ---------- */
+/* Reuses the two colors already assigned these roles everywhere else in
+   the app (legend keys, locator dots) -- lagoon = primary, coral =
+   compare -- so a heatmap/ranked/Sankey pair reads the same way a
+   line-chart legend already does. Independent of, and layered on top of,
+   the existing per-chart-type left-border accent. */
+
+.chart-panel-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+
+.chart-panel-label.role-primary { color: var(--lagoon); }
+.chart-panel-label.role-compare { color: var(--coral); }
+[data-theme="dark"] .chart-panel-label.role-primary { color: var(--lagoon-light); }
 
 /* ---------- action steps / climate action block ---------- */
 
@@ -485,13 +518,6 @@ main { min-height: 70vh; }
 
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
-}
-
-.version-note {
-    max-width: 980px;
-    margin: 0.6rem auto 0;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
 }
 
 .chart-grid.v2-extra {
@@ -660,16 +686,3 @@ main { min-height: 70vh; }
     display: none;
 }
 
-.tab-panel.active {
-    display: block;
-}
-
-/* ---------- v2: per-chart-type accent ---------- */
-
-.chart-card[data-chart-type="line"] { border-left: 3px solid var(--lagoon); }
-.chart-card[data-chart-type="heatmap"] { border-left: 3px solid var(--amber); }
-.chart-card[data-chart-type="ranked"] { border-left: 3px solid var(--moss); }
-.chart-card[data-chart-type="tailrisk"] { border-left: 3px solid var(--coral); }
-.chart-card[data-chart-type="sankey"] { border-left: 3px solid var(--deep-ocean-2); }
-
-[data-theme="dark"] .chart-card[data-chart-type="sankey"] { border-left-color: var(--lagoon-light); }

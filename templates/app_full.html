@@ -106,49 +106,65 @@
         <div class="tab-panel" id="land-products" data-render-group="land_products" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Crop Yield by Product ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows the median crop yield by product and year.</p>
                     <div id="heatmap-crop_yield" class="plotly-chart"></div>
-                    <p class="chart-insight">{{ ranked_insights.crop_yield }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_insights.crop_yield }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Crop Yield by Product ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows the median crop yield by product and year.</p>
                     <div id="heatmap-crop_yield-compare" class="plotly-chart"></div>
-                    <p class="chart-insight">{{ compare_ranked_insights.crop_yield }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_insights.crop_yield }}</p>
                 </div>
                 {% endif %}
 
                 <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Top &amp; Bottom 10 Crop Products ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-crop_yield" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Top &amp; Bottom 10 Crop Products ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-crop_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% endif %}
 
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Livestock Yield by Product ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows the median livestock yield by product and year.</p>
                     <div id="heatmap-livestock_yield" class="plotly-chart"></div>
-                    <p class="chart-insight">{{ ranked_insights.livestock_yield }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_insights.livestock_yield }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Livestock Yield by Product ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows the median livestock yield by product and year.</p>
                     <div id="heatmap-livestock_yield-compare" class="plotly-chart"></div>
-                    <p class="chart-insight">{{ compare_ranked_insights.livestock_yield }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_insights.livestock_yield }}</p>
                 </div>
                 {% endif %}
 
                 <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Top &amp; Bottom 10 Livestock Products ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-livestock_yield" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Top &amp; Bottom 10 Livestock Products ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-livestock_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% endif %}
@@ -190,14 +206,19 @@
         <div class="tab-panel" id="people-mix" data-render-group="people_mix" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Power Generation by Source ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows total generation by energy source and year.</p>
                     <div id="heatmap-power_sources" class="plotly-chart"></div>
-                    <p class="chart-insight">{{ power_source_insight }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ power_source_insight }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Power Generation by Source ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Each cell shows total generation by energy source and year.</p>
                     <div id="heatmap-power_sources-compare" class="plotly-chart"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_power_source_insight }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -206,15 +227,19 @@
         <div class="tab-panel" id="people-flow" data-render-group="people_flow" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="sankey">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Power Generation Flow ({{ selected_country }})</h3>
+                    <p class="chart-subtitle">Flow from energy source to grid connection, summed across all recorded years.</p>
                     <div id="sankey-power" class="plotly-chart" style="min-height: 420px;"></div>
-                    <p class="chart-insight">{{ sankey_insight }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ sankey_insight }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="sankey">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Power Generation Flow ({{ compare_country }})</h3>
+                    <p class="chart-subtitle">Flow from energy source to grid connection, summed across all recorded years.</p>
                     <div id="sankey-power-compare" class="plotly-chart" style="min-height: 420px;"></div>
-                    <p class="chart-insight">{{ compare_sankey_insight }}</p>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_sankey_insight }}</p>
                 </div>
                 {% endif %}
             </div>

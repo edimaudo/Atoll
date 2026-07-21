@@ -71,11 +71,13 @@
             {
                 x: top.map((p) => p[1]), y: top.map((p) => `${p[0]} (top)`),
                 type: "bar", orientation: "h", marker: { color: COLORS.primary }, name: "Top 10",
+                text: top.map((p) => p[1].toFixed(1)), textposition: "outside",
                 hovertemplate: `%{y}: %{x:.2f}${unit}<extra></extra>`,
             },
             {
                 x: bottom.map((p) => p[1]), y: bottom.map((p) => `${p[0]} (bottom)`),
                 type: "bar", orientation: "h", marker: { color: COLORS.compare }, name: "Bottom 10",
+                text: bottom.map((p) => p[1].toFixed(1)), textposition: "outside",
                 hovertemplate: `%{y}: %{x:.2f}${unit}<extra></extra>`,
             },
         ], layoutFn(), { responsive: true, displayModeBar: false });
