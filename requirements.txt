@@ -13,11 +13,6 @@ numpy==1.26.4
 scipy==1.13.1
 plotly>=5.17.0
 
-# Statistical Modeling and Machine Learning
-statsmodels==0.14.2
-scikit-learn==1.5.0
-xgboost==2.0.3
-ruptures==1.1.9
 
 # Server / File Support
 python-multipart==0.0.9
