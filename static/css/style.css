@@ -1,39 +1,45 @@
 /* ============================================================
    ATOLL — design tokens
-   Palette: deep ocean (dark), lagoon (primary accent), sand/foam
-   (light content ground), coral (atoll/alert), amber (secondary).
+   Palette: IBM Carbon neutral gray scale for backgrounds (theme-
+   distinguishable in both light and dark), Purple as the primary
+   brand/interactive accent, coral/amber/moss/current as data-viz
+   accent colors. Every pair below is contrast-checked (see
+   wcag_check.py) against WCAG 2.1 AA, 4.5:1 for text.
    Type: IBM Plex Serif (display headings) + IBM Plex Sans (body/UI) +
-   axis — reads like a ledger heading) + IBM Plex Sans (body/UI) +
    IBM Plex Mono (data figures, captions, coordinates).
    ============================================================ */
 
 :root {
-    --deep-ocean: #0b2a3d;
-    --deep-ocean-2: #123a52;
-    --lagoon: #1c7c8c;
-    --lagoon-light: #bfe3e6;
-    --sand: #ede3cf;
-    --foam: #faf8f3;
-    --ink: #16242c;
-    --ink-soft: #4a5a62;
-    --coral: #e2603a;
-    --amber: #d99a3d;
+    --header-bg: #161616;
+    --hero-bg: #ffffff;
+    --hero-text: #161616;
+    --brand: #8a3ffc;
+    --brand-light: #8a3ffc;
+    --sand: #f4f4f4;
+    --foam: #ffffff;
+    --ink: #161616;
+    --ink-soft: #525252;
+    --coral: #b8471f;
+    --amber: #8a5a00;
     --moss: #5b8266;
-    --current: #3a6ea5;
-    --border: #ddd2ba;
+    --border: #e0e0e0;
     --card-bg: #ffffff;
     --page-bg: var(--foam);
-    --shadow: 0 6px 20px rgba(11, 42, 61, 0.08);
+    --shadow: 0 6px 20px rgba(22, 22, 22, 0.08);
 }
 
 [data-theme="dark"] {
-    --page-bg: #0d1b23;
-    --ink: #eef3f2;
-    --ink-soft: #a9bcc2;
-    --border: #24414d;
-    --card-bg: #142933;
-    --sand: #17303a;
-    --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    --hero-bg: #161616;
+    --hero-text: #f4f4f4;
+    --brand-light: #d0a9ff;
+    --amber: #d99a3d;
+    --page-bg: #161616;
+    --ink: #f4f4f4;
+    --ink-soft: #c6c6c6;
+    --border: #393939;
+    --card-bg: #262626;
+    --sand: #262626;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
 * { box-sizing: border-box; }
@@ -61,12 +67,13 @@ h1, h2, h3 {
     font-size: 0.8rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--lagoon);
+    color: var(--brand);
 }
 
-[data-theme="dark"] .eyebrow { color: var(--lagoon-light); }
+[data-theme="dark"] .eyebrow { color: var(--brand-light); }
 
-a { color: var(--lagoon); }
+a { color: var(--brand); }
+[data-theme="dark"] a { color: var(--brand-light); }
 
 .data-figure {
     font-family: 'IBM Plex Mono', monospace;
@@ -79,7 +86,7 @@ a { color: var(--lagoon); }
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 2rem;
-    background: var(--deep-ocean);
+    background: var(--header-bg);
     color: var(--foam);
 }
 
@@ -110,7 +117,7 @@ a { color: var(--lagoon); }
 .site-header .controls button,
 .site-header .controls select {
     background: transparent;
-    border: 1px solid rgba(250, 248, 243, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     color: var(--foam);
     padding: 0.4rem 0.9rem;
     border-radius: 5px;
@@ -153,14 +160,14 @@ main { min-height: 70vh; }
 /* ---------- landing page ---------- */
 
 .hero {
-    background: linear-gradient(180deg, var(--deep-ocean) 0%, var(--deep-ocean-2) 100%);
-    color: var(--foam);
+    background: var(--hero-bg);
+    color: var(--hero-text);
     padding: 5rem 2rem 4rem;
     text-align: center;
 }
 
 .hero h1 {
-    color: var(--foam);
+    color: var(--hero-text);
     font-size: clamp(2rem, 4.5vw, 3.2rem);
     max-width: 850px;
     margin: 0.5rem auto 1rem;
@@ -170,7 +177,7 @@ main { min-height: 70vh; }
     max-width: 640px;
     margin: 0 auto 2rem;
     font-size: 1.15rem;
-    color: var(--lagoon-light);
+    color: var(--ink-soft);
 }
 
 .section {
@@ -288,7 +295,7 @@ main { min-height: 70vh; }
 
 .bridge-note {
     background: var(--card-bg);
-    border-left: 3px solid var(--lagoon);
+    border-left: 3px solid var(--brand);
     border-radius: 6px;
     padding: 1rem 1.2rem;
     margin-top: 1rem;
@@ -331,8 +338,14 @@ main { min-height: 70vh; }
 
 .chart-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .chart-card {
@@ -373,7 +386,7 @@ main { min-height: 70vh; }
     vertical-align: middle;
 }
 
-.legend-key .k-primary::before { background: var(--lagoon); }
+.legend-key .k-primary::before { background: var(--brand); }
 .legend-key .k-median::before { background: var(--ink-soft); }
 .legend-key .k-compare::before { background: var(--coral); }
 
@@ -408,30 +421,11 @@ main { min-height: 70vh; }
 
 .error-page h1 {
     font-size: 5rem;
-    color: var(--lagoon);
+    color: var(--brand);
     margin-bottom: 0;
 }
 
 /* ---------- misc ---------- */
-
-.stat-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.5rem;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.stat-strip .stat-value {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 2rem;
-    color: var(--amber);
-}
-
-.stat-strip .stat-label {
-    font-size: 0.85rem;
-    color: var(--lagoon-light);
-}
 
 /* ---------- single headline stat (landing) ---------- */
 
@@ -439,8 +433,8 @@ main { min-height: 70vh; }
     max-width: 640px;
     margin: 2.5rem auto 0;
     padding: 1.5rem;
-    background: rgba(250, 248, 243, 0.06);
-    border: 1px solid rgba(250, 248, 243, 0.2);
+    background: var(--sand);
+    border: 1px solid var(--border);
     border-radius: 10px;
 }
 
@@ -476,7 +470,7 @@ main { min-height: 70vh; }
 
 /* ---------- country-panel header (compare-mode, non-line charts) ---------- */
 /* Reuses the two colors already assigned these roles everywhere else in
-   the app (legend keys, locator dots) -- lagoon = primary, coral =
+   the app (legend keys, locator dots) -- brand = primary, coral =
    compare -- so a heatmap/ranked/Sankey pair reads the same way a
    line-chart legend already does. Independent of, and layered on top of,
    the existing per-chart-type left-border accent. */
@@ -489,15 +483,15 @@ main { min-height: 70vh; }
     margin-bottom: 0.4rem;
 }
 
-.chart-panel-label.role-primary { color: var(--lagoon); }
+.chart-panel-label.role-primary { color: var(--brand); }
 .chart-panel-label.role-compare { color: var(--coral); }
-[data-theme="dark"] .chart-panel-label.role-primary { color: var(--lagoon-light); }
+[data-theme="dark"] .chart-panel-label.role-primary { color: var(--brand-light); }
 
 /* ---------- action steps / climate action block ---------- */
 
 .action-card p, .action-card ul { margin: 0.4em 0; }
-.action-card strong { color: var(--lagoon); }
-[data-theme="dark"] .action-card strong { color: var(--lagoon-light); }
+.action-card strong { color: var(--brand); }
+[data-theme="dark"] .action-card strong { color: var(--brand-light); }
 
 .climate-action-block {
     margin-top: 1.5rem;
@@ -522,6 +516,36 @@ main { min-height: 70vh; }
 
 .chart-grid.v2-extra {
     margin-top: 1.5rem;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: -3rem;
+    left: 0.5rem;
+    background: var(--brand);
+    color: #ffffff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0 0 6px 6px;
+    z-index: 100;
+    text-decoration: none;
+    font-weight: 600;
+    transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+    top: 0;
 }
 
 .chart-empty-state {
@@ -589,8 +613,8 @@ main { min-height: 70vh; }
 }
 
 .tab-btn.active {
-    background: var(--lagoon);
-    border-color: var(--lagoon);
+    background: var(--brand);
+    border-color: var(--brand);
     color: #fff;
 }
 
@@ -599,14 +623,6 @@ main { min-height: 70vh; }
 .tab-panel {
     /* visibility controlled inline via JS; this just resets spacing */
 }
-
-/* ---------- per-chart-type accent (v2) ---------- */
-
-.chart-card[data-charttype="line"] { border-left: 4px solid var(--lagoon); }
-.chart-card[data-charttype="heatmap"] { border-left: 4px solid var(--amber); }
-.chart-card[data-charttype="ranked"] { border-left: 4px solid var(--moss); }
-.chart-card[data-charttype="tailrisk"] { border-left: 4px solid var(--coral); }
-.chart-card[data-charttype="sankey"] { border-left: 4px solid var(--current); }
 
 /* ---------- v2: sticky pillar sub-nav ---------- */
 
@@ -633,11 +649,11 @@ main { min-height: 70vh; }
 }
 
 .pillar-subnav a:hover {
-    color: var(--lagoon);
+    color: var(--brand);
 }
 
 [data-theme="dark"] .pillar-subnav a:hover {
-    color: var(--lagoon-light);
+    color: var(--brand-light);
 }
 
 .pillar {
@@ -673,13 +689,13 @@ main { min-height: 70vh; }
 }
 
 .tab-button.active {
-    color: var(--lagoon);
-    border-bottom-color: var(--lagoon);
+    color: var(--brand);
+    border-bottom-color: var(--brand);
 }
 
 [data-theme="dark"] .tab-button.active {
-    color: var(--lagoon-light);
-    border-bottom-color: var(--lagoon-light);
+    color: var(--brand-light);
+    border-bottom-color: var(--brand-light);
 }
 
 .tab-panel {

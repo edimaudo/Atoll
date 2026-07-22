@@ -26,17 +26,33 @@
         <div class="bridge-note">{{ country_data.meta.custom }}</div>
     </div>
     <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-         role="img" aria-label="Map showing the location of {{ selected_country }} in the Pacific Ocean">
-        <rect x="0" y="0" width="100" height="100" fill="var(--lagoon-light)" opacity="0.25" />
-        {% for name, pos in all_country_positions.items() %}
-            {% if name != selected_country and name != compare_country %}
-            <circle cx="{{ pos.x_pct }}" cy="{{ pos.y_pct }}" r="1.1" fill="var(--ink-soft)" opacity="0.4" />
-            {% endif %}
+         role="img" aria-label="Map showing {{ selected_country }}{% if compare_country %} and {{ compare_country }}{% endif %} within the Pacific region">
+        <rect x="0" y="0" width="100" height="100" fill="var(--sand)" />
+
+        {% for i in range(1, 4) %}
+        <line x1="{{ i * 25 }}" y1="0" x2="{{ i * 25 }}" y2="100" stroke="var(--border)" stroke-width="0.3" />
+        <line x1="0" y1="{{ i * 25 }}" x2="100" y2="{{ i * 25 }}" stroke="var(--border)" stroke-width="0.3" />
         {% endfor %}
+
+        <line x1="0" y1="40" x2="100" y2="40" stroke="var(--ink-soft)" stroke-width="0.5" stroke-dasharray="1.5,1.5" />
+        <text x="2" y="38" font-size="3" fill="var(--ink-soft)" font-family="IBM Plex Mono, monospace">EQUATOR</text>
+
+        <line x1="50" y1="0" x2="50" y2="100" stroke="var(--ink-soft)" stroke-width="0.5" stroke-dasharray="1.5,1.5" />
+        <text x="51" y="4" font-size="3" fill="var(--ink-soft)" font-family="IBM Plex Mono, monospace">DATE LINE</text>
+
         {% if compare_country %}
-        <circle cx="{{ all_country_positions[compare_country].x_pct }}" cy="{{ all_country_positions[compare_country].y_pct }}" r="2.2" fill="var(--current)" stroke="var(--card-bg)" stroke-width="0.6" />
+        {% set cp = all_country_positions[compare_country] %}
+        <circle cx="{{ cp.x_pct }}" cy="{{ cp.y_pct }}" r="2.4" fill="var(--coral)" stroke="var(--card-bg)" stroke-width="0.6" />
+        <text x="{{ cp.x_pct + 3 if cp.x_pct <= 50 else cp.x_pct - 3 }}" y="{{ cp.y_pct - 3.5 }}"
+              text-anchor="{{ 'start' if cp.x_pct <= 50 else 'end' }}" font-size="3.4"
+              fill="var(--coral)" font-family="IBM Plex Mono, monospace" font-weight="500">{{ compare_country }}</text>
         {% endif %}
-        <circle cx="{{ country_data.meta.x_pct }}" cy="{{ country_data.meta.y_pct }}" r="2.6" fill="var(--coral)" stroke="var(--card-bg)" stroke-width="0.6" />
+
+        {% set pp = country_data.meta %}
+        <circle cx="{{ pp.x_pct }}" cy="{{ pp.y_pct }}" r="2.8" fill="var(--brand)" stroke="var(--card-bg)" stroke-width="0.6" />
+        <text x="{{ pp.x_pct + 3 if pp.x_pct <= 50 else pp.x_pct - 3 }}" y="{{ pp.y_pct - 4 }}"
+              text-anchor="{{ 'start' if pp.x_pct <= 50 else 'end' }}" font-size="3.6"
+              fill="var(--brand)" font-family="IBM Plex Mono, monospace" font-weight="600">{{ selected_country }}</text>
     </svg>
 </div>
 
@@ -58,7 +74,6 @@
 {% for chapter_key, chapter in chapters.items() %}
 <section class="pillar" id="pillar-{{ chapter_key }}">
     <div class="pillar-narrative">
-        <span class="eyebrow">{{ chapter.title }}</span>
         <h2>{{ chapter.title }}</h2>
     </div>
     <div class="chart-grid">
@@ -91,7 +106,7 @@
             <h3>Climate Action Steps</h3>
             <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
             <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button>
-            <div id="actionPlanStatus" class="action-plan-status"></div>
+            <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
         </div>
     </div>

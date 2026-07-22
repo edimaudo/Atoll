@@ -3,13 +3,13 @@
     if (!v2El) return; // not on a v2 page
     const v2 = JSON.parse(v2El.textContent);
 
-    const COLORS = { primary: "#1c7c8c", median: "#8a97a0", compare: "#e2603a" };
+    const COLORS = { primary: "#8a3ffc", median: "#8a97a0", compare: "#b8471f" };
 
     function isDark() {
         return document.documentElement.getAttribute("data-theme") === "dark";
     }
     function baseLayout(extra) {
-        const t = isDark() ? { font: "#eef3f2", grid: "#24414d" } : { font: "#16242c", grid: "#ede3cf" };
+        const t = isDark() ? { font: "#f4f4f4", grid: "#393939" } : { font: "#161616", grid: "#e0e0e0" };
         return Object.assign({
             margin: { t: 20, r: 20, b: 40, l: 90 },
             paper_bgcolor: "transparent",
@@ -190,33 +190,56 @@
     // ---------- tab controller ----------
     const renderedGroups = new Set();
 
+    function activateTab(tabRoot, buttons, btn) {
+        const targetId = btn.dataset.target;
+
+        buttons.forEach((b) => {
+            const isActive = b === btn;
+            b.classList.toggle("active", isActive);
+            b.setAttribute("aria-selected", isActive ? "true" : "false");
+            b.tabIndex = isActive ? 0 : -1;
+        });
+        tabRoot.querySelectorAll(".tab-panel").forEach((panel) => {
+            panel.style.display = panel.id === targetId ? "block" : "none";
+        });
+
+        const panel = tabRoot.querySelector(`#${targetId}`);
+        if (!panel) return;
+        const group = panel.dataset.renderGroup;
+
+        if (group && !renderedGroups.has(group)) {
+            renderGroups[group]();
+            renderedGroups.add(group);
+        } else {
+            // Already rendered earlier (or is the always-visible Trends
+            // panel) -- resize in case it drifted while hidden.
+            // Plotly adds "js-plotly-plot" to a div once it's been drawn,
+            // so that's a reliable signal a chart actually exists there.
+            panel.querySelectorAll(".plotly-chart.js-plotly-plot").forEach((div) => {
+                Plotly.Plots.resize(div);
+            });
+        }
+    }
+
     document.querySelectorAll(".tabs").forEach((tabRoot) => {
-        const buttons = tabRoot.querySelectorAll(".tab-btn");
-        buttons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const targetId = btn.dataset.target;
+        const buttons = Array.from(tabRoot.querySelectorAll(".tab-btn"));
 
-                buttons.forEach((b) => b.classList.toggle("active", b === btn));
-                tabRoot.querySelectorAll(".tab-panel").forEach((panel) => {
-                    panel.style.display = panel.id === targetId ? "block" : "none";
-                });
+        buttons.forEach((btn, i) => {
+            btn.addEventListener("click", () => activateTab(tabRoot, buttons, btn));
 
-                const panel = tabRoot.querySelector(`#${targetId}`);
-                if (!panel) return;
-                const group = panel.dataset.renderGroup;
+            // WAI-ARIA tabs pattern: Left/Right arrow moves focus and
+            // activates the adjacent tab; Home/End jump to first/last.
+            btn.addEventListener("keydown", (e) => {
+                let targetIndex = null;
+                if (e.key === "ArrowRight") targetIndex = (i + 1) % buttons.length;
+                else if (e.key === "ArrowLeft") targetIndex = (i - 1 + buttons.length) % buttons.length;
+                else if (e.key === "Home") targetIndex = 0;
+                else if (e.key === "End") targetIndex = buttons.length - 1;
+                else return;
 
-                if (group && !renderedGroups.has(group)) {
-                    renderGroups[group]();
-                    renderedGroups.add(group);
-                } else {
-                    // Already rendered earlier (or is the always-visible Trends
-                    // panel) -- resize in case it drifted while hidden.
-                    // Plotly adds "js-plotly-plot" to a div once it's been drawn,
-                    // so that's a reliable signal a chart actually exists there.
-                    panel.querySelectorAll(".plotly-chart.js-plotly-plot").forEach((div) => {
-                        Plotly.Plots.resize(div);
-                    });
-                }
+                e.preventDefault();
+                buttons[targetIndex].focus();
+                activateTab(tabRoot, buttons, buttons[targetIndex]);
             });
         });
     });

@@ -5,10 +5,10 @@
     // server, no JS needed, nothing that depends on external network calls.
 
     // ---------- charts: one Plotly line chart per pillar indicator ----------
-    const COLORS = { primary: "#1c7c8c", median: "#8a97a0", compare: "#e2603a" };
+    const COLORS = { primary: "#8a3ffc", median: "#8a97a0", compare: "#b8471f" };
     const THEME = {
-        light: { font: "#16242c", grid: "#ede3cf" },
-        dark: { font: "#eef3f2", grid: "#24414d" },
+        light: { font: "#161616", grid: "#e0e0e0" },
+        dark: { font: "#f4f4f4", grid: "#393939" },
     };
 
     const chartDivs = []; // track for live re-theming

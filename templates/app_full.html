@@ -26,17 +26,33 @@
         <div class="bridge-note">{{ country_data.meta.custom }}</div>
     </div>
     <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-         role="img" aria-label="Map showing the location of {{ selected_country }} in the Pacific Ocean">
-        <rect x="0" y="0" width="100" height="100" fill="var(--lagoon-light)" opacity="0.25" />
-        {% for name, pos in all_country_positions.items() %}
-            {% if name != selected_country and name != compare_country %}
-            <circle cx="{{ pos.x_pct }}" cy="{{ pos.y_pct }}" r="1.1" fill="var(--ink-soft)" opacity="0.4" />
-            {% endif %}
+         role="img" aria-label="Map showing {{ selected_country }}{% if compare_country %} and {{ compare_country }}{% endif %} within the Pacific region">
+        <rect x="0" y="0" width="100" height="100" fill="var(--sand)" />
+
+        {% for i in range(1, 4) %}
+        <line x1="{{ i * 25 }}" y1="0" x2="{{ i * 25 }}" y2="100" stroke="var(--border)" stroke-width="0.3" />
+        <line x1="0" y1="{{ i * 25 }}" x2="100" y2="{{ i * 25 }}" stroke="var(--border)" stroke-width="0.3" />
         {% endfor %}
+
+        <line x1="0" y1="40" x2="100" y2="40" stroke="var(--ink-soft)" stroke-width="0.5" stroke-dasharray="1.5,1.5" />
+        <text x="2" y="38" font-size="3" fill="var(--ink-soft)" font-family="IBM Plex Mono, monospace">EQUATOR</text>
+
+        <line x1="50" y1="0" x2="50" y2="100" stroke="var(--ink-soft)" stroke-width="0.5" stroke-dasharray="1.5,1.5" />
+        <text x="51" y="4" font-size="3" fill="var(--ink-soft)" font-family="IBM Plex Mono, monospace">DATE LINE</text>
+
         {% if compare_country %}
-        <circle cx="{{ all_country_positions[compare_country].x_pct }}" cy="{{ all_country_positions[compare_country].y_pct }}" r="2.2" fill="var(--current)" stroke="var(--card-bg)" stroke-width="0.6" />
+        {% set cp = all_country_positions[compare_country] %}
+        <circle cx="{{ cp.x_pct }}" cy="{{ cp.y_pct }}" r="2.4" fill="var(--coral)" stroke="var(--card-bg)" stroke-width="0.6" />
+        <text x="{{ cp.x_pct + 3 if cp.x_pct <= 50 else cp.x_pct - 3 }}" y="{{ cp.y_pct - 3.5 }}"
+              text-anchor="{{ 'start' if cp.x_pct <= 50 else 'end' }}" font-size="3.4"
+              fill="var(--coral)" font-family="IBM Plex Mono, monospace" font-weight="500">{{ compare_country }}</text>
         {% endif %}
-        <circle cx="{{ country_data.meta.x_pct }}" cy="{{ country_data.meta.y_pct }}" r="2.6" fill="var(--coral)" stroke="var(--card-bg)" stroke-width="0.6" />
+
+        {% set pp = country_data.meta %}
+        <circle cx="{{ pp.x_pct }}" cy="{{ pp.y_pct }}" r="2.8" fill="var(--brand)" stroke="var(--card-bg)" stroke-width="0.6" />
+        <text x="{{ pp.x_pct + 3 if pp.x_pct <= 50 else pp.x_pct - 3 }}" y="{{ pp.y_pct - 4 }}"
+              text-anchor="{{ 'start' if pp.x_pct <= 50 else 'end' }}" font-size="3.6"
+              fill="var(--brand)" font-family="IBM Plex Mono, monospace" font-weight="600">{{ selected_country }}</text>
     </svg>
 </div>
 
@@ -64,25 +80,24 @@
 {% for chapter_key, chapter in chapters.items() %}
 <section class="pillar" id="pillar-{{ chapter_key }}">
     <div class="pillar-narrative">
-        <span class="eyebrow">{{ chapter.title }}</span>
-        <h2>{{ chapter.title }}</h2>
+        <h2 class="sr-only">{{ chapter.title }}</h2>
     </div>
 
     <div class="tabs" data-pillar="{{ chapter_key }}">
         <div class="tab-list" role="tablist">
-            <button class="tab-btn active" data-target="{{ chapter_key }}-trends" aria-selected="true">Trends</button>
+            <button class="tab-btn active" id="tab-btn-{{ chapter_key }}-trends" role="tab" aria-controls="{{ chapter_key }}-trends" data-target="{{ chapter_key }}-trends" aria-selected="true" tabindex="0">Trends</button>
             {% if chapter_key == "land" %}
-            <button class="tab-btn" data-target="land-products">Crop &amp; Livestock by Product</button>
-            <button class="tab-btn" data-target="land-risk">Rainfall Risk</button>
+            <button class="tab-btn" id="tab-btn-land-products" role="tab" aria-controls="land-products" data-target="land-products" aria-selected="false" tabindex="-1">Crop &amp; Livestock by Product</button>
+            <button class="tab-btn" id="tab-btn-land-risk" role="tab" aria-controls="land-risk" data-target="land-risk" aria-selected="false" tabindex="-1">Rainfall Risk</button>
             {% elif chapter_key == "ocean" %}
-            <button class="tab-btn" data-target="ocean-risk">Temperature Risk</button>
+            <button class="tab-btn" id="tab-btn-ocean-risk" role="tab" aria-controls="ocean-risk" data-target="ocean-risk" aria-selected="false" tabindex="-1">Temperature Risk</button>
             {% elif chapter_key == "people" %}
-            <button class="tab-btn" data-target="people-mix">Power Mix</button>
-            <button class="tab-btn" data-target="people-flow">Power Flow</button>
+            <button class="tab-btn" id="tab-btn-people-mix" role="tab" aria-controls="people-mix" data-target="people-mix" aria-selected="false" tabindex="-1">Power Mix</button>
+            <button class="tab-btn" id="tab-btn-people-flow" role="tab" aria-controls="people-flow" data-target="people-flow" aria-selected="false" tabindex="-1">Power Flow</button>
             {% endif %}
         </div>
 
-        <div class="tab-panel" id="{{ chapter_key }}-trends" style="display:block;">
+        <div class="tab-panel" id="{{ chapter_key }}-trends" role="tabpanel" aria-labelledby="tab-btn-{{ chapter_key }}-trends" tabindex="0" style="display:block;">
             <div class="chart-grid">
                 {% for indicator_key in chapter.indicators %}
                     {% if indicator_key in country_data.indicators %}
@@ -103,11 +118,11 @@
         </div>
 
         {% if chapter_key == "land" %}
-        <div class="tab-panel" id="land-products" data-render-group="land_products" style="display:none;">
+        <div class="tab-panel" id="land-products" role="tabpanel" aria-labelledby="tab-btn-land-products" tabindex="0" data-render-group="land_products" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Crop Yield by Product ({{ selected_country }})</h3>
+                    <h3>Crop Yield by Product</h3>
                     <p class="chart-subtitle">Each cell shows the median crop yield by product and year.</p>
                     <div id="heatmap-crop_yield" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_insights.crop_yield }}</p>
@@ -115,7 +130,7 @@
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Crop Yield by Product ({{ compare_country }})</h3>
+                    <h3>Crop Yield by Product</h3>
                     <p class="chart-subtitle">Each cell shows the median crop yield by product and year.</p>
                     <div id="heatmap-crop_yield-compare" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_insights.crop_yield }}</p>
@@ -124,14 +139,14 @@
 
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Top &amp; Bottom 10 Crop Products ({{ selected_country }})</h3>
+                    <h3>Top & Bottom 10 Crop Products</h3>
                     <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-crop_yield" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Top &amp; Bottom 10 Crop Products ({{ compare_country }})</h3>
+                    <h3>Top & Bottom 10 Crop Products</h3>
                     <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-crop_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
@@ -139,7 +154,7 @@
 
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Livestock Yield by Product ({{ selected_country }})</h3>
+                    <h3>Livestock Yield by Product</h3>
                     <p class="chart-subtitle">Each cell shows the median livestock yield by product and year.</p>
                     <div id="heatmap-livestock_yield" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_insights.livestock_yield }}</p>
@@ -147,7 +162,7 @@
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Livestock Yield by Product ({{ compare_country }})</h3>
+                    <h3>Livestock Yield by Product</h3>
                     <p class="chart-subtitle">Each cell shows the median livestock yield by product and year.</p>
                     <div id="heatmap-livestock_yield-compare" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_insights.livestock_yield }}</p>
@@ -156,14 +171,14 @@
 
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Top &amp; Bottom 10 Livestock Products ({{ selected_country }})</h3>
+                    <h3>Top & Bottom 10 Livestock Products</h3>
                     <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-livestock_yield" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Top &amp; Bottom 10 Livestock Products ({{ compare_country }})</h3>
+                    <h3>Top & Bottom 10 Livestock Products</h3>
                     <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
                     <div id="ranked-livestock_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
                 </div>
@@ -171,7 +186,7 @@
             </div>
         </div>
 
-        <div class="tab-panel" id="land-risk" data-render-group="land_risk" style="display:none;">
+        <div class="tab-panel" id="land-risk" role="tabpanel" aria-labelledby="tab-btn-land-risk" tabindex="0" data-render-group="land_risk" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="tailrisk">
                     <h3>Rainfall Anomaly — Tail-Risk Analysis</h3>
@@ -187,7 +202,7 @@
         {% endif %}
 
         {% if chapter_key == "ocean" %}
-        <div class="tab-panel" id="ocean-risk" data-render-group="ocean_risk" style="display:none;">
+        <div class="tab-panel" id="ocean-risk" role="tabpanel" aria-labelledby="tab-btn-ocean-risk" tabindex="0" data-render-group="ocean_risk" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="tailrisk">
                     <h3>Surface Temperature Anomaly — Tail-Risk Analysis</h3>
@@ -203,11 +218,11 @@
         {% endif %}
 
         {% if chapter_key == "people" %}
-        <div class="tab-panel" id="people-mix" data-render-group="people_mix" style="display:none;">
+        <div class="tab-panel" id="people-mix" role="tabpanel" aria-labelledby="tab-btn-people-mix" tabindex="0" data-render-group="people_mix" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Power Generation by Source ({{ selected_country }})</h3>
+                    <h3>Power Generation by Source</h3>
                     <p class="chart-subtitle">Each cell shows total generation by energy source and year.</p>
                     <div id="heatmap-power_sources" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ power_source_insight }}</p>
@@ -215,7 +230,7 @@
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Power Generation by Source ({{ compare_country }})</h3>
+                    <h3>Power Generation by Source</h3>
                     <p class="chart-subtitle">Each cell shows total generation by energy source and year.</p>
                     <div id="heatmap-power_sources-compare" class="plotly-chart"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_power_source_insight }}</p>
@@ -224,11 +239,11 @@
             </div>
         </div>
 
-        <div class="tab-panel" id="people-flow" data-render-group="people_flow" style="display:none;">
+        <div class="tab-panel" id="people-flow" role="tabpanel" aria-labelledby="tab-btn-people-flow" tabindex="0" data-render-group="people_flow" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="sankey">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Power Generation Flow ({{ selected_country }})</h3>
+                    <h3>Power Generation Flow</h3>
                     <p class="chart-subtitle">Flow from energy source to grid connection, summed across all recorded years.</p>
                     <div id="sankey-power" class="plotly-chart" style="min-height: 420px;"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ sankey_insight }}</p>
@@ -236,7 +251,7 @@
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="sankey">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Power Generation Flow ({{ compare_country }})</h3>
+                    <h3>Power Generation Flow</h3>
                     <p class="chart-subtitle">Flow from energy source to grid connection, summed across all recorded years.</p>
                     <div id="sankey-power-compare" class="plotly-chart" style="min-height: 420px;"></div>
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_sankey_insight }}</p>
@@ -259,7 +274,7 @@
             <h3>Climate Action Steps</h3>
             <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
             <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button>
-            <div id="actionPlanStatus" class="action-plan-status"></div>
+            <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
         </div>
     </div>
