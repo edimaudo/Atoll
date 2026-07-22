@@ -16,21 +16,22 @@
     </form>
 </div>
 
-<div class="country-header">
-    <div>
+<div class="country-header" style="width: 100%;">
+    <!-- 1. Ensure this inner parent div takes up full width -->
+    <div style="width: 100%;">
         <h1>{{ country_data.meta.flag }} {{ selected_country }}</h1>
         
-        <!-- Added width: 100% and a gap to force spacing -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 40px;">
+        <!-- 2. Flex container -->
+        <div style="display: flex; align-items: flex-start; width: 100%;">
             
-            <!-- Added flex, a gap, and nowrap to stop the text from squishing -->
-            <div class="fact-row" style="display: flex; gap: 30px; flex-shrink: 0; white-space: nowrap;">
+            <!-- Left side stats -->
+            <div class="fact-row" style="display: flex; gap: 24px; white-space: nowrap; flex-shrink: 0;">
                 <div><span class="eyebrow">Population</span><div class="data-figure">{{ country_data.meta.population }}</div></div>
                 <div><span class="eyebrow">Land area</span><div class="data-figure">{{ country_data.meta.area_km2 }} km²</div></div>
             </div>
             
-            <!-- Aligning the text to the right makes it look cleaner -->
-            <div class="bridge-note" style="border-left: none; text-align: right;">
+            <!-- 3. margin-left: auto forces this element to the far right edge -->
+            <div class="bridge-note" style="margin-left: auto; text-align: right; border-left: none; padding-left: 5px; max-width: 400px;">
                 {{ country_data.meta.custom }}
             </div>
             
