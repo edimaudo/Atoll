@@ -16,24 +16,33 @@
     </form>
 </div>
 
-<div class="country-header">
-    <div>
+
+<div class="country-header" style="display: block; width: 100%;">
+    <div style="display: block; width: 100%;">
+        
         <h1>{{ country_data.meta.flag }} {{ selected_country }}</h1>
         
-        <!-- New Flex Wrapper -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        
+        <div style="display: flex; align-items: flex-start; width: 100%;">
             
-            <div class="fact-row">
+            
+            <div class="fact-row" style="display: flex; gap: 24px; white-space: nowrap; flex-shrink: 0;">
                 <div><span class="eyebrow">Population</span><div class="data-figure">{{ country_data.meta.population }}</div></div>
                 <div><span class="eyebrow">Land area</span><div class="data-figure">{{ country_data.meta.area_km2 }} km²</div></div>
             </div>
             
-            <!-- Bridge note now sits on the right -->
-            <div class="bridge-note" style="border-left: none; padding-left: 5px;">{{ country_data.meta.custom }}</div>
+            
+            <div style="flex-grow: 1; min-width: 40px;"></div>
+            
+            
+            <div class="bridge-note" style="border-left: none; flex-shrink: 0;">
+                {{ country_data.meta.custom }}
+            </div>
             
         </div>
         
     </div>
+</div>
     <!-- <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Map showing {{ selected_country }}{% if compare_country %} and {{ compare_country }}{% endif %} within the Pacific region">
         <rect x="0" y="0" width="100" height="100" fill="var(--sand)" />
@@ -62,8 +71,8 @@
         <text x="{{ pp.x_pct + 3 if pp.x_pct <= 50 else pp.x_pct - 3 }}" y="{{ pp.y_pct - 4 }}"
               text-anchor="{{ 'start' if pp.x_pct <= 50 else 'end' }}" font-size="3.6"
               fill="var(--brand)" font-family="IBM Plex Mono, monospace" font-weight="600">{{ selected_country }}</text>
-    </svg> -->
-</div>
+    </svg> </div>-->
+
 
 <div class="compare-bar">
     <form action="/app/full" method="GET">
