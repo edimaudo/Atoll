@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ selected_country }} — Atoll{% endblock %}
+{% block title %}{{ selected_country }} {% endblock %}
 
 {% block content %}
 
@@ -23,9 +23,10 @@
             <div><span class="eyebrow">Population</span><div class="data-figure">{{ country_data.meta.population }}</div></div>
             <div><span class="eyebrow">Land area</span><div class="data-figure">{{ country_data.meta.area_km2 }} km²</div></div>
         </div>
-        <div class="bridge-note">{{ country_data.meta.custom }}</div>
+        <!-- <div class="bridge-note">{{ country_data.meta.custom }}</div> -->
+        <div class="bridge-note" style="border-left: none; padding-left: 0;">{{ country_data.meta.custom }}</div>
     </div>
-    <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+    <!-- <svg id="locator-map" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
          role="img" aria-label="Map showing {{ selected_country }}{% if compare_country %} and {{ compare_country }}{% endif %} within the Pacific region">
         <rect x="0" y="0" width="100" height="100" fill="var(--sand)" />
 
@@ -53,7 +54,7 @@
         <text x="{{ pp.x_pct + 3 if pp.x_pct <= 50 else pp.x_pct - 3 }}" y="{{ pp.y_pct - 4 }}"
               text-anchor="{{ 'start' if pp.x_pct <= 50 else 'end' }}" font-size="3.6"
               fill="var(--brand)" font-family="IBM Plex Mono, monospace" font-weight="600">{{ selected_country }}</text>
-    </svg>
+    </svg> -->
 </div>
 
 <div class="compare-bar">
