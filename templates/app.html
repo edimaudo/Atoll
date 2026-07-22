@@ -20,20 +20,24 @@
     <div>
         <h1>{{ country_data.meta.flag }} {{ selected_country }}</h1>
         
-        <!-- New Flex Wrapper -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <!-- Added width: 100% and a gap to force spacing -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 40px;">
             
-            <div class="fact-row">
+            <!-- Added flex, a gap, and nowrap to stop the text from squishing -->
+            <div class="fact-row" style="display: flex; gap: 30px; flex-shrink: 0; white-space: nowrap;">
                 <div><span class="eyebrow">Population</span><div class="data-figure">{{ country_data.meta.population }}</div></div>
                 <div><span class="eyebrow">Land area</span><div class="data-figure">{{ country_data.meta.area_km2 }} km²</div></div>
             </div>
             
-            <!-- Bridge note now sits on the right -->
-            <div class="bridge-note" style="border-left: none; padding-left: 5px;">{{ country_data.meta.custom }}</div>
+            <!-- Aligning the text to the right makes it look cleaner -->
+            <div class="bridge-note" style="border-left: none; text-align: right;">
+                {{ country_data.meta.custom }}
+            </div>
             
         </div>
         
     </div>
+</div>
 <!-- <div class="country-header">
     <div>
         <h1>{{ country_data.meta.flag }} {{ selected_country }}</h1>
@@ -72,8 +76,7 @@
         <text x="{{ pp.x_pct + 3 if pp.x_pct <= 50 else pp.x_pct - 3 }}" y="{{ pp.y_pct - 4 }}"
               text-anchor="{{ 'start' if pp.x_pct <= 50 else 'end' }}" font-size="3.6"
               fill="var(--brand)" font-family="IBM Plex Mono, monospace" font-weight="600">{{ selected_country }}</text>
-    </svg> -->
-</div> -->
+    </svg> </div> -->
 
 <div class="compare-bar">
     <form action="/app" method="GET">
