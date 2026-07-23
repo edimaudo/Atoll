@@ -132,7 +132,7 @@
     function drawSankey(divId, sankeyData) {
         const div = document.getElementById(divId);
         if (!div) return;
-        if (!sankeyData || !sankeyData.links.length) {
+        if (!sankeyData?.links?.length  ) { //!sankeyData || !sankeyData.links.length
             showEmptyState(div, "No power generation flow data available for this chart.");
             return;
         }
