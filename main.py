@@ -1,13 +1,6 @@
-"""
-main.py — Atoll
-
-Pure routing. Data access + insight text generation live in store.py; this
-file just: validate input, ask store.py for data, render a template.
-"""
 
 import os
 from pathlib import Path
-
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -19,14 +12,14 @@ import store
 
 BASE_DIR = Path(__file__).parent
 
-app = FastAPI(title="Atoll — Pacific Climate Change")
+app = FastAPI(title="Pacific Climate Change")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    """Hook, how-to-navigate, datasets used, one CTA into the app."""
+    """Landing Page."""
     return templates.TemplateResponse(
         request,
         "index.html",
@@ -191,12 +184,7 @@ class ActionPlanRequest(BaseModel):
 @app.post("/api/action-plan")
 async def generate_action_plan(payload: ActionPlanRequest):
     """Sends the dynamic trend summary to Airia AI and returns its markdown
-    response. This is the integration POINT, not a finished integration --
-    Airia's exact request/response contract isn't something we have
-    documented here, so AIRIA_API_URL / AIRIA_API_KEY need to be set as
-    environment variables (in Vercel: Project Settings -> Environment
-    Variables) and the request body below shaped to match Airia's actual
-    API before this will return real output.
+    response.
     """
     api_url = os.environ.get("AIRIA_API_URL")
     api_key = os.environ.get("AIRIA_API_KEY")
