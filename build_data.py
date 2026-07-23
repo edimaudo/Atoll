@@ -1,30 +1,4 @@
-"""
-build_data.py — Atoll offline data build
-
-Runs once (locally or in CI), computes everything the app needs from the
-source CSVs, writes static/data/climate_data.json. main.py/store.py never
-import pandas -- they just read this file at request time.
-
-Architecture note (changed this round): insight SENTENCES are no longer
-generated here. A country's JSON entry can't know ahead of time which
-compare-country a visitor will pick at request time, so per-chart dynamic
-insight text (which must reference the compare country when one is
-selected) is generated live in store.py from the numeric trend stats this
-file DOES precompute (slope, r-squared, full series, regional median).
-That keeps pandas out of the request path while still letting the insight
-text react to whatever's actually on the page.
-
-7 datasets are included -- every dataset from the original notebook that
-actually had a visualization built for it (temperature anomaly, sea
-surface temp anomaly, rainfall anomaly, crop yield, livestock yield, power
-generation, tourism arrivals). The other 4 source CSVs (environmental
-taxes, GHG emissions per capita, meteorological monitoring, sea level
-anomalies) were loaded in the notebook but never turned into a chart there
-either, so there's no existing visualization to carry over for those.
-"""
-
 from __future__ import annotations
-
 import json
 import numpy as np
 import pandas as pd
@@ -80,11 +54,11 @@ INDICATORS = {
         "label": "Total Power Generation",
         "chapter": "people",
         "agg": "sum",
-        "custom_loader": True,  # multi-dimensional source; see load_power_generation()
+        "custom_loader": True,
     },
     "tourism_arrivals": {
         "file": "Tourist%20arrivals%20(disaggregated).csv",
-        "filters": {"Visitor duration category": "Overnight tourists", "UNIT_MEASURE": "N"},
+        "filters": {"Visitor duration category": "Overnight tourists", "UNIT_MEASURE": ""}, ##N
         "unit": "",
         "label": "Overnight Tourist Arrivals",
         "chapter": "people",
@@ -92,6 +66,22 @@ INDICATORS = {
     },
 }
 
+PRODUCT_DATASETS = {
+    "crop_yield": {
+        "file": "Crop%20yield%20(disaggregated).csv",
+        "filters": {"AGRICULTURE_PRODUCTION_TYPE": "CROP_YIELD", "UNIT_MEASURE": "KGHA"},
+        "unit": " KG/HA",
+        "label": "Crop Yield",
+    },
+    "livestock_yield": {
+        "file": "Livestock%20yield%20(disaggregated).csv",
+        "filters": {"AGRICULTURE_PRODUCTION_TYPE": "LVST_YIELD", "UNIT_MEASURE": "KG_AN"},
+        "unit": " KG/AN",
+        "label": "Livestock Yield",
+    },
+}
+
+TAIL_RISK_INDICATORS = ["surface_temp_anomaly", "rainfall_anomaly"]
 CHAPTER_ORDER = ["land", "ocean", "people"]
 CHAPTER_TITLES = {
     "land": "Land & Food",
@@ -99,8 +89,6 @@ CHAPTER_TITLES = {
     "people": "People & Economy",
 }
 
-# Facts only -- no invented classification. Population/area sourced from the
-# same country reference the original app.html used.
 COUNTRY_META = {
     "American Samoa":   {"code": "AS", "lat": -14.2710, "lon": -170.1320, "flag": "\U0001F1E6\U0001F1F8", "population": "43,915",    "area_km2": "199",     "custom": "Fa'a Samoa places immense importance on the extended family and chiefs."},
     "Cook Islands":     {"code": "CK", "lat": -21.2360, "lon": -159.7770, "flag": "\U0001F1E8\U0001F1F0", "population": "17,044",    "area_km2": "236",     "custom": "Tivaevae, hand-sewn patchwork quilts, are made as ceremonial gifts."},
@@ -147,13 +135,6 @@ def load_and_filter(cfg: dict) -> pd.DataFrame:
 
 
 def load_power_generation() -> pd.DataFrame:
-    """Power generation isn't a single value per country/year -- it's broken
-    out by energy source and grid connection status. For the line-chart
-    view we want one 'total generation' number per country/year, so we sum
-    every energy source's GWH figure, excluding rows that are themselves
-    subtotals ('Total' in the energy-source name, or the 'Total' grid
-    connection status) to avoid double-counting.
-    """
     df = pd.read_csv(f"{DATA_BASE_URL}{INDICATORS['power_generation']['file']}")
     df.rename(columns={"TIME_PERIOD": "Year", "Pacific Island Countries and territories": "Country"}, inplace=True)
 
@@ -170,6 +151,52 @@ def load_power_generation() -> pd.DataFrame:
     return df[["Country", "Year", "OBS_VALUE"]]
 
 
+def load_product_data(cfg: dict) -> pd.DataFrame:
+    df = pd.read_csv(f"{DATA_BASE_URL}{cfg['file']}")
+    df.rename(columns={"TIME_PERIOD": "Year", "Pacific Island Countries and territories": "Country"}, inplace=True)
+
+    mask = pd.Series(True, index=df.index)
+    for col, val in cfg["filters"].items():
+        mask &= df[col] == val
+    df = df[mask].copy()
+
+    df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+    df["OBS_VALUE"] = pd.to_numeric(df["OBS_VALUE"], errors="coerce")
+    df = df.dropna(subset=["Year", "OBS_VALUE", "Country", "Agricultural product"])
+    df["Year"] = df["Year"].astype(int)
+    return df[["Country", "Year", "Agricultural product", "OBS_VALUE"]]
+
+
+def load_power_by_source() -> pd.DataFrame:
+    df = pd.read_csv(f"{DATA_BASE_URL}Power%20generation%20(disaggregated).csv")
+    df.rename(columns={"TIME_PERIOD": "Year", "Pacific Island Countries and territories": "Country"}, inplace=True)
+    mask = (
+        (df["UNIT_MEASURE"] == "GWH")
+        & (~df["Energy source"].str.contains("Total", case=False, na=False))
+        & (df["Grid connection status"] == "Total")
+    )
+    df = df[mask].copy()
+    df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+    df["OBS_VALUE"] = pd.to_numeric(df["OBS_VALUE"], errors="coerce")
+    df = df.dropna(subset=["Year", "OBS_VALUE", "Country", "Energy source"])
+    df["Year"] = df["Year"].astype(int)
+    return df[["Country", "Year", "Energy source", "OBS_VALUE"]]
+
+
+def load_power_by_source_and_grid() -> pd.DataFrame:
+    df = pd.read_csv(f"{DATA_BASE_URL}Power%20generation%20(disaggregated).csv")
+    df.rename(columns={"TIME_PERIOD": "Year", "Pacific Island Countries and territories": "Country"}, inplace=True)
+    mask = (
+        (df["UNIT_MEASURE"] == "GWH")
+        & (df["Grid connection status"].isin(["Off-grid", "On-grid"]))
+        & (~df["Energy source"].str.contains("total", case=False, na=False))
+    )
+    df = df[mask].copy()
+    df["OBS_VALUE"] = pd.to_numeric(df["OBS_VALUE"], errors="coerce")
+    df = df.dropna(subset=["OBS_VALUE", "Country", "Energy source", "Grid connection status"])
+    return df[["Country", "Energy source", "Grid connection status", "OBS_VALUE"]]
+
+
 def to_series(df: pd.DataFrame, country: str, agg: str) -> dict[int, float]:
     sub = df[df["Country"] == country]
     if sub.empty:
@@ -179,16 +206,10 @@ def to_series(df: pd.DataFrame, country: str, agg: str) -> dict[int, float]:
 
 
 def linear_trend(years: list[int], values: list[float]) -> dict:
-    """Least-squares slope over the FULL series -- not windowed averages.
-
-    Also reports the slope as a percentage of the series' own mean
-    magnitude, so trends across indicators with very different units and
-    scales (degrees C vs. tourist counts) can be fairly compared later.
-    """
     x = np.array(years, dtype=float)
     y = np.array(values, dtype=float)
     if len(x) < 3:
-        return {"slope_per_decade": None, "r_squared": None, "relative_slope_pct": None}
+        return {"slope_per_decade": None, "slope_per_year": None, "r_squared": None, "relative_slope_pct": None}
 
     slope, intercept = np.polyfit(x, y, 1)
     fitted = slope * x + intercept
@@ -208,12 +229,62 @@ def linear_trend(years: list[int], values: list[float]) -> dict:
     }
 
 
+def build_product_json(df: pd.DataFrame, country: str) -> dict:
+    sub = df[df["Country"] == country]
+    out = {}
+    for product, grp in sub.groupby("Agricultural product"):
+        grp = grp.groupby("Year")["OBS_VALUE"].median().sort_index()
+        if grp.empty:
+            continue
+        out[product] = {"years": [int(y) for y in grp.index], "values": [round(float(v), 2) for v in grp.values]}
+    return out
+
+
+def build_power_source_json(df: pd.DataFrame, country: str) -> dict:
+    sub = df[df["Country"] == country]
+    out = {}
+    for source, grp in sub.groupby("Energy source"):
+        grp = grp.groupby("Year")["OBS_VALUE"].sum().sort_index()
+        if grp.empty:
+            continue
+        out[source] = {"years": [int(y) for y in grp.index], "values": [round(float(v), 2) for v in grp.values]}
+    return out
+
+
+def build_sankey_json(df: pd.DataFrame, country: str) -> dict:
+    sub = df[df["Country"] == country]
+    agg = sub.groupby(["Energy source", "Grid connection status"])["OBS_VALUE"].sum().reset_index()
+    return {
+        "links": [
+            {"source": row["Energy source"], "target": row["Grid connection status"], "value": round(float(row["OBS_VALUE"]), 2)}
+            for _, row in agg.iterrows()
+        ]
+    }
+
+
+def build_tail_risk(years: list[int], values: list[float]) -> dict:
+    arr = np.array(values, dtype=float)
+    mean_val = float(arr.mean())
+    std_val = float(arr.std())
+    threshold = 2 * std_val
+
+    extremes = [
+        {"year": y, "value": v}
+        for y, v in zip(years, values)
+        if abs(v - mean_val) > threshold
+    ]
+
+    return {
+        "years": years,
+        "values": values,
+        "mean": round(mean_val, 3),
+        "std": round(std_val, 3),
+        "threshold": round(threshold, 3),
+        "extremes": extremes,
+    }
+
+
 def project_to_svg(lat: float, lon: float) -> dict:
-    """Simple equirectangular projection to SVG percentage coordinates for a
-    static locator dot-map. Longitudes are shifted (+360 for negatives) to
-    avoid the antimeridian wraparound splitting the Pacific layout in two --
-    every territory here clusters within a ~110-degree band once shifted.
-    """
     shifted_lon = lon + 360 if lon < 0 else lon
     lon_min, lon_max = 125, 235
     lat_min, lat_max = -30, 20
@@ -224,10 +295,15 @@ def project_to_svg(lat: float, lon: float) -> dict:
 
 
 def build() -> dict:
-    print("Downloading and filtering source datasets...")
+    print("Downloading base datasets...")
     filtered = {}
     for name, cfg in INDICATORS.items():
         filtered[name] = load_power_generation() if cfg.get("custom_loader") else load_and_filter(cfg)
+
+    print("Downloading product-level and power datasets...")
+    product_dfs = {name: load_product_data(cfg) for name, cfg in PRODUCT_DATASETS.items()}
+    power_source_df = load_power_by_source()
+    power_sankey_df = load_power_by_source_and_grid()
 
     regional_median = {}
     for name, df in filtered.items():
@@ -256,20 +332,30 @@ def build() -> dict:
                 "regional_median": median_values,
                 "trend": trend,
             }
+        
+        country_data = {"meta": meta, "indicators": indicators_out}
 
-        countries_out[country] = {"meta": meta, "indicators": indicators_out}
+        # Injecting additional subsets during main build step
+        country_data["products"] = {
+            name: build_product_json(df, country) for name, df in product_dfs.items()
+        }
+        country_data["power_sources"] = build_power_source_json(power_source_df, country)
+        country_data["power_sankey"] = build_sankey_json(power_sankey_df, country)
+
+        tail_risk = {}
+        for ind_key in TAIL_RISK_INDICATORS:
+            ind = indicators_out.get(ind_key)
+            if ind and ind["years"]:
+                tail_risk[ind_key] = build_tail_risk(ind["years"], ind["values"])
+        country_data["tail_risk"] = tail_risk
+
+        countries_out[country] = country_data
 
     chapters = {
         ck: {"title": CHAPTER_TITLES[ck], "indicators": [k for k, v in INDICATORS.items() if v["chapter"] == ck]}
         for ck in CHAPTER_ORDER
     }
 
-    # Landing-page headline stat. Deliberately reported in the metric's own
-    # unit (degrees C), not as a percentage -- surface temperature anomaly
-    # crosses zero and dips negative in the early record, so a percent-
-    # change framing would divide by a near-zero base and produce a
-    # meaningless, wildly inflated number. Absolute change is the honest
-    # framing for an anomaly series.
     temp_med = regional_median["surface_temp_anomaly"]
     temp_years = sorted(temp_med)
     headline_stat = {
@@ -298,4 +384,4 @@ if __name__ == "__main__":
     out_path = "static/data/climate_data.json"
     with open(out_path, "w") as f:
         json.dump(data, f, separators=(",", ":"))
-    print(f"Wrote {out_path} ({sum(len(c['indicators']) for c in data['countries'].values())} country-indicator series)")
+    print(f"Wrote {out_path}")
