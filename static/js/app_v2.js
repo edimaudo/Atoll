@@ -45,7 +45,11 @@
             return allYears.map((y) => (y in yearToVal ? yearToVal[y] : null));
         });
 
-        const layoutFn = () => baseLayout({ height: Math.max(300, products.length * 22 + 80) });
+        const layoutFn = () => baseLayout({
+            height: Math.max(300, products.length * 22 + 80),
+            yaxis: { automargin: true },
+            margin: { t: 20, r: 20, b: 40, l: 20 },
+        });
         Plotly.newPlot(div, [{
             z, x: allYears, y: products, type: "heatmap", colorscale: "YlGnBu",
             hovertemplate: `<b>%{y}</b><br>Year: %{x}<br>${valueLabel}: %{z}<extra></extra>`,
@@ -54,33 +58,29 @@
         rethemeTargets.push({ div, redraw: layoutFn });
     }
 
-    // ---------- 2. Ranked top/bottom-10 bar charts ----------
-    function drawRanked(divId, ranked, unit) {
+    // ---------- 2. Ranked top-10 / bottom-10 bar charts (drawn as two separate charts) ----------
+    function drawRankedSingle(divId, list, unit, color) {
         const div = document.getElementById(divId);
         if (!div) return;
-        if (!ranked || (!ranked.top.length && !ranked.bottom.length)) {
+        if (!list || !list.length) {
             showEmptyState(div, "No data available for this chart.");
             return;
         }
 
-        const top = ranked.top.slice().reverse();
-        const bottom = ranked.bottom.slice().reverse();
+        const ordered = list.slice().reverse(); // so #1 sits at the top of the chart
+        const formatted = ordered.map((p) => p[1].toLocaleString(undefined, { maximumFractionDigits: 1 }));
 
-        const layoutFn = () => baseLayout({ height: 420, showlegend: true, legend: { orientation: "h" }, margin: { t: 40, r: 20, b: 40, l: 200 } });
-        Plotly.newPlot(div, [
-            {
-                x: top.map((p) => p[1]), y: top.map((p) => `${p[0]} (top)`),
-                type: "bar", orientation: "h", marker: { color: COLORS.primary }, name: "Top 10",
-                text: top.map((p) => p[1].toFixed(1)), textposition: "outside",
-                hovertemplate: `%{y}: %{x:.2f}${unit}<extra></extra>`,
-            },
-            {
-                x: bottom.map((p) => p[1]), y: bottom.map((p) => `${p[0]} (bottom)`),
-                type: "bar", orientation: "h", marker: { color: COLORS.compare }, name: "Bottom 10",
-                text: bottom.map((p) => p[1].toFixed(1)), textposition: "outside",
-                hovertemplate: `%{y}: %{x:.2f}${unit}<extra></extra>`,
-            },
-        ], layoutFn(), { responsive: true, displayModeBar: false });
+        const layoutFn = () => baseLayout({
+            height: 380,
+            margin: { t: 20, r: 90, b: 40, l: 200 },
+            xaxis: { automargin: true },
+        });
+        Plotly.newPlot(div, [{
+            x: ordered.map((p) => p[1]), y: ordered.map((p) => p[0]),
+            type: "bar", orientation: "h", marker: { color },
+            text: formatted, textposition: "outside", cliponaxis: false,
+            hovertemplate: `%{y}: %{x:.2f}${unit}<extra></extra>`,
+        }], layoutFn(), { responsive: true, displayModeBar: false });
 
         rethemeTargets.push({ div, redraw: layoutFn });
     }
@@ -132,7 +132,7 @@
     function drawSankey(divId, sankeyData) {
         const div = document.getElementById(divId);
         if (!div) return;
-        if (!sankeyData?.links?.length  ) { //!sankeyData || !sankeyData.links.length
+        if (!sankeyData || !sankeyData.links.length) {
             showEmptyState(div, "No power generation flow data available for this chart.");
             return;
         }
@@ -148,6 +148,7 @@
                 source: sankeyData.links.map((l) => nodeIndex[l.source]),
                 target: sankeyData.links.map((l) => nodeIndex[l.target]),
                 value: sankeyData.links.map((l) => l.value),
+                color: "rgba(138, 151, 160, 0.45)",
             },
         }], layoutFn(), { responsive: true, displayModeBar: false });
         rethemeTargets.push({ div, redraw: layoutFn });
@@ -157,14 +158,18 @@
     const renderGroups = {
         land_products: () => {
             drawHeatmap("heatmap-crop_yield", v2.primary.products.crop_yield, "KG/HA");
-            drawRanked("ranked-crop_yield", v2.primary.ranked.crop_yield, " KG/HA");
+            drawRankedSingle("ranked-crop_yield-top", v2.primary.ranked.crop_yield.top, " KG/HA", COLORS.primary);
+            drawRankedSingle("ranked-crop_yield-bottom", v2.primary.ranked.crop_yield.bottom, " KG/HA", COLORS.compare);
             drawHeatmap("heatmap-livestock_yield", v2.primary.products.livestock_yield, "KG/AN");
-            drawRanked("ranked-livestock_yield", v2.primary.ranked.livestock_yield, " KG/AN");
+            drawRankedSingle("ranked-livestock_yield-top", v2.primary.ranked.livestock_yield.top, " KG/AN", COLORS.primary);
+            drawRankedSingle("ranked-livestock_yield-bottom", v2.primary.ranked.livestock_yield.bottom, " KG/AN", COLORS.compare);
             if (v2.compare) {
                 drawHeatmap("heatmap-crop_yield-compare", v2.compare.products.crop_yield, "KG/HA");
-                drawRanked("ranked-crop_yield-compare", v2.compare.ranked.crop_yield, " KG/HA");
+                drawRankedSingle("ranked-crop_yield-compare-top", v2.compare.ranked.crop_yield.top, " KG/HA", COLORS.primary);
+                drawRankedSingle("ranked-crop_yield-compare-bottom", v2.compare.ranked.crop_yield.bottom, " KG/HA", COLORS.compare);
                 drawHeatmap("heatmap-livestock_yield-compare", v2.compare.products.livestock_yield, "KG/AN");
-                drawRanked("ranked-livestock_yield-compare", v2.compare.ranked.livestock_yield, " KG/AN");
+                drawRankedSingle("ranked-livestock_yield-compare-top", v2.compare.ranked.livestock_yield.top, " KG/AN", COLORS.primary);
+                drawRankedSingle("ranked-livestock_yield-compare-bottom", v2.compare.ranked.livestock_yield.bottom, " KG/AN", COLORS.compare);
             }
         },
         land_risk: () => {
@@ -177,11 +182,9 @@
                 v2.compare ? v2.compare.tail_risk.surface_temp_anomaly : null,
                 v2.primary.name, v2.compare ? v2.compare.name : null, "\u00b0C");
         },
-        people_mix: () => {
+        people_power: () => {
             drawHeatmap("heatmap-power_sources", v2.primary.power_sources, "GWH");
             if (v2.compare) drawHeatmap("heatmap-power_sources-compare", v2.compare.power_sources, "GWH");
-        },
-        people_flow: () => {
             drawSankey("sankey-power", v2.primary.power_sankey);
             if (v2.compare) drawSankey("sankey-power-compare", v2.compare.power_sankey);
         },

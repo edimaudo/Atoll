@@ -348,6 +348,19 @@ main { min-height: 70vh; }
     }
 }
 
+/* Heatmaps, ranked bar charts, and Sankey diagrams all carry many
+   category labels (products, energy sources, flow nodes) that get
+   illegible when squeezed into a half-width column -- measured at
+   only 406px wide in the standard 2-column grid, not enough room for
+   labels like "Vegetables, fresh n.e.c." or an 8-node Sankey. These
+   chart types get the full row instead; line charts and tail-risk
+   (fewer/shorter labels) are fine at half width. */
+.chart-card[data-charttype="heatmap"],
+.chart-card[data-charttype="ranked"],
+.chart-card[data-charttype="sankey"] {
+    grid-column: 1 / -1;
+}
+
 .chart-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -561,34 +574,6 @@ main { min-height: 70vh; }
     border: 1px dashed var(--border);
 }
 
-/* ---------- sticky pillar sub-nav (v2) ---------- */
-
-.pillar-subnav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.7rem 2rem;
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-}
-
-.pillar-subnav a {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-    text-decoration: none;
-    color: var(--ink-soft);
-    padding: 0.4rem 0.9rem;
-    border-radius: 5px;
-}
-
-.pillar-subnav a:hover {
-    background: var(--sand);
-    color: var(--ink);
-}
-
 /* ---------- tabs (v2) ---------- */
 
 .tab-list {
@@ -622,38 +607,6 @@ main { min-height: 70vh; }
 
 .tab-panel {
     /* visibility controlled inline via JS; this just resets spacing */
-}
-
-/* ---------- v2: sticky pillar sub-nav ---------- */
-
-.pillar-subnav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display: flex;
-    gap: 1.5rem;
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 0.9rem 2rem;
-    background: var(--page-bg);
-    border-bottom: 1px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-}
-
-.pillar-subnav a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.pillar-subnav a:hover {
-    color: var(--brand);
-}
-
-[data-theme="dark"] .pillar-subnav a:hover {
-    color: var(--brand-light);
 }
 
 .pillar {

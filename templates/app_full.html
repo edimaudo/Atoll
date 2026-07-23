@@ -150,16 +150,28 @@
 
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Top & Bottom 10 Crop Products</h3>
-                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
-                    <div id="ranked-crop_yield" class="plotly-chart" style="min-height: 420px;"></div>
+                    <h3>Top 10 Crop Products</h3>
+                    <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
+                    <div id="ranked-crop_yield-top" class="plotly-chart" style="min-height: 380px;"></div>
+                </div>
+                <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
+                    <h3>Bottom 10 Crop Products</h3>
+                    <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
+                    <div id="ranked-crop_yield-bottom" class="plotly-chart" style="min-height: 380px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Top & Bottom 10 Crop Products</h3>
-                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
-                    <div id="ranked-crop_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
+                    <h3>Top 10 Crop Products</h3>
+                    <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
+                    <div id="ranked-crop_yield-compare-top" class="plotly-chart" style="min-height: 380px;"></div>
+                </div>
+                <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
+                    <h3>Bottom 10 Crop Products</h3>
+                    <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
+                    <div id="ranked-crop_yield-compare-bottom" class="plotly-chart" style="min-height: 380px;"></div>
                 </div>
                 {% endif %}
 
@@ -182,16 +194,28 @@
 
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
-                    <h3>Top & Bottom 10 Livestock Products</h3>
-                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
-                    <div id="ranked-livestock_yield" class="plotly-chart" style="min-height: 420px;"></div>
+                    <h3>Top 10 Livestock Products</h3>
+                    <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
+                    <div id="ranked-livestock_yield-top" class="plotly-chart" style="min-height: 380px;"></div>
+                </div>
+                <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-primary">{{ selected_country }}</span>
+                    <h3>Bottom 10 Livestock Products</h3>
+                    <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
+                    <div id="ranked-livestock_yield-bottom" class="plotly-chart" style="min-height: 380px;"></div>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
-                    <h3>Top & Bottom 10 Livestock Products</h3>
-                    <p class="chart-subtitle">Top 10 and bottom 10 products by median yield across all recorded years.</p>
-                    <div id="ranked-livestock_yield-compare" class="plotly-chart" style="min-height: 420px;"></div>
+                    <h3>Top 10 Livestock Products</h3>
+                    <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
+                    <div id="ranked-livestock_yield-compare-top" class="plotly-chart" style="min-height: 380px;"></div>
+                </div>
+                <div class="chart-card" data-charttype="ranked">
+                    <span class="chart-panel-label role-compare">{{ compare_country }}</span>
+                    <h3>Bottom 10 Livestock Products</h3>
+                    <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
+                    <div id="ranked-livestock_yield-compare-bottom" class="plotly-chart" style="min-height: 380px;"></div>
                 </div>
                 {% endif %}
             </div>
@@ -273,14 +297,14 @@
 
 <section class="action-steps">
     <div class="action-steps-inner">
+        <span class="eyebrow">Action steps</span>
         <h2>Trend Summary for {{ selected_country }}{% if compare_country %} vs. {{ compare_country }}{% endif %}</h2>
         <div class="action-card" id="trend-summary-markdown" data-raw="{{ action_summary | e }}"></div>
 
         <div class="climate-action-block">
             <h3>Climate Action Steps</h3>
             <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
-            <!-- <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button> -->
-            <button id="generatePlanBtn" class="btn-cta" data-raw="{{ action_summary | e }}">Generate Action Plan</button>
+            <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button>
             <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
         </div>

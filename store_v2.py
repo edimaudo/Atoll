@@ -54,19 +54,37 @@ def ranked_products_insight(country: str, indicator_label: str, unit: str, ranke
     )
 
 
-def tail_risk_insight(country: str, indicator_label: str, unit: str, tail_risk: dict) -> str:
+def tail_risk_insight(country: str, indicator_label: str, unit: str, tail_risk: dict,
+                       compare: str = "", compare_tail_risk: dict | None = None) -> str:
     n = len(tail_risk["extremes"])
     if n == 0:
-        return (
+        sentence = (
             f"{country} has recorded no anomalies beyond {tail_risk['threshold']:.2f}{unit} from the historical "
             f"mean ({tail_risk['mean']:.2f}{unit}) -- no extreme {indicator_label.lower()} events stand out in this record."
         )
-    most_extreme = max(tail_risk["extremes"], key=lambda e: abs(e["value"] - tail_risk["mean"]))
-    return (
-        f"{country} has recorded {n} extreme {indicator_label.lower()} event(s), each more than "
-        f"{tail_risk['threshold']:.2f}{unit} from the historical mean ({tail_risk['mean']:.2f}{unit}). "
-        f"The most extreme was {most_extreme['year']}, at {most_extreme['value']:.2f}{unit}."
-    )
+    else:
+        most_extreme = max(tail_risk["extremes"], key=lambda e: abs(e["value"] - tail_risk["mean"]))
+        sentence = (
+            f"{country} has recorded {n} extreme {indicator_label.lower()} event(s), each more than "
+            f"{tail_risk['threshold']:.2f}{unit} from the historical mean ({tail_risk['mean']:.2f}{unit}). "
+            f"The most extreme was {most_extreme['year']}, at {most_extreme['value']:.2f}{unit}."
+        )
+
+    if compare and compare_tail_risk:
+        c_n = len(compare_tail_risk["extremes"])
+        if c_n == 0:
+            sentence += (
+                f" By comparison, {compare} has recorded no anomalies beyond its own threshold of "
+                f"{compare_tail_risk['threshold']:.2f}{unit} from its historical mean ({compare_tail_risk['mean']:.2f}{unit})."
+            )
+        else:
+            c_most_extreme = max(compare_tail_risk["extremes"], key=lambda e: abs(e["value"] - compare_tail_risk["mean"]))
+            sentence += (
+                f" By comparison, {compare} has recorded {c_n} extreme event(s) of its own, the most extreme "
+                f"being {c_most_extreme['year']} at {c_most_extreme['value']:.2f}{unit}."
+            )
+
+    return sentence
 
 
 def power_source_insight(country: str, power_sources: dict) -> str:
