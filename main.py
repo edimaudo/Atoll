@@ -206,9 +206,7 @@ async def generate_action_plan(payload: ActionPlanRequest):
             status_code=501,
             content={
                 "error": (
-                    "Airia AI isn't configured yet. Set AIRIA_API_URL and AIRIA_API_KEY "
-                    "as environment variables, then adjust the request body in "
-                    "generate_action_plan() to match Airia's API contract."
+                    "Airia AI isn't configured yet. Check your API Settings.
                 )
             },
         )
