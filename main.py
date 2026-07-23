@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+
 import store
 
 BASE_DIR = Path(__file__).parent
@@ -17,7 +18,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    """Landing Page."""
+    """Hook, how-to-navigate, datasets used, one CTA into the app."""
     return templates.TemplateResponse(
         request,
         "index.html",
@@ -111,11 +112,7 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
         }
 
     tail_risk_insights = {
-        key: store_v2.tail_risk_insight(
-            country, country_data["indicators"][key]["label"], country_data["indicators"][key]["unit"],
-            country_data["tail_risk"][key],
-            compare, compare_data["tail_risk"].get(key) if compare_data else None,
-        )
+        key: store_v2.tail_risk_insight(country, country_data["indicators"][key]["label"], country_data["indicators"][key]["unit"], country_data["tail_risk"][key])
         for key in country_data["tail_risk"]
     }
 
@@ -182,33 +179,34 @@ class ActionPlanRequest(BaseModel):
 @app.post("/api/action-plan")
 async def generate_action_plan(payload: ActionPlanRequest):
     """Sends the dynamic trend summary to Airia AI and returns its markdown
-    response.
+    response. 
     """
-    api_url = os.environ.get("AIRIA_API_URL")
-    api_key = os.environ.get("AIRIA_API_KEY")
+    api_url = 'https://api.airia.ai/v2/PipelineExecution/0c6dd785-b1f2-42a4-8637-d81560f4b0a5' #os.environ.get("API_URL")
+    api_key = os.environ.get("API_KEY")
 
     if not api_url or not api_key:
         return JSONResponse(
             status_code=501,
             content={
                 "error": (
-                    "Airia AI isn't configured yet. Check your API Settings.
+                    "Airia AI isn't configured yet. Check AIRIA_API_URL and AIRIA_API_KEY "
                 )
             },
         )
 
     prompt = (
-        f"You are a climate adaptation advisor. Based on this data summary for "
-        f"{payload.country}, write a short, concrete climate action plan in "
-        f"markdown, organized by theme (Land & Food, Ocean & Atmosphere, "
-        f"People & Economy):\n\n{payload.summary}"
+        f"You are a climate change expert and advisor for {payload.country}.\n\n"
+        f"Based on this data summary:\n"
+        f"\"\"\"\n{payload.summary}\n\"\"\"\n\n"
+        f"Write a short, concrete climate action plan in markdown, "
+        f"organized by theme (Land & Food, Ocean & Atmosphere, People & Economy)."
     )
 
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=300.0) as client:
         response = await client.post(
             api_url,
             headers={"Authorization": f"Bearer {api_key}"},
-            json={"input": prompt},  # TODO: match Airia's actual request schema
+            json={"input": prompt},  
         )
         response.raise_for_status()
         data = response.json()
