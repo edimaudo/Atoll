@@ -77,39 +77,86 @@
     }
 
     // ---------- Climate Action Steps: generate plan via Airia AI ----------
-    const genBtn = document.getElementById("generatePlanBtn");
-    if (genBtn) {
-        const actionContextEl = document.getElementById("action-context");
-        const actionContext = actionContextEl ? JSON.parse(actionContextEl.textContent) : null;
-        const statusEl = document.getElementById("actionPlanStatus");
-        const outputEl = document.getElementById("actionPlanOutput");
+    // const genBtn = document.getElementById("generatePlanBtn");
+    // if (genBtn) {
+    //     const actionContextEl = document.getElementById("action-context");
+    //     const actionContext = actionContextEl ? JSON.parse(actionContextEl.textContent) : null;
+    //     const statusEl = document.getElementById("actionPlanStatus");
+    //     const outputEl = document.getElementById("actionPlanOutput");
 
-        genBtn.addEventListener("click", async () => {
-            statusEl.textContent = "Generating action plan...";
-            outputEl.style.display = "none";
-            genBtn.disabled = true;
+    //     genBtn.addEventListener("click", async () => {
+    //         statusEl.textContent = "Generating action plan...";
+    //         outputEl.style.display = "none";
+    //         genBtn.disabled = true;
 
-            try {
-                const res = await fetch("/api/action-plan", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(actionContext),
-                });
-                const data = await res.json();
+    //         try {
+    //             const res = await fetch("/api/action-plan", {
+    //                 method: "POST",
+    //                 headers: { "Content-Type": "application/json" },
+    //                 body: JSON.stringify(actionContext),
+    //             });
+    //             const data = await res.json();
 
-                if (!res.ok) {
-                    statusEl.textContent = data.error || "Couldn't generate a plan right now.";
-                    return;
-                }
+    //             if (!res.ok) {
+    //                 statusEl.textContent = data.error || "Couldn't generate a plan right now.";
+    //                 return;
+    //             }
 
-                outputEl.innerHTML = marked.parse(data.markdown || "");
-                outputEl.style.display = "block";
-                statusEl.textContent = "";
-            } catch (err) {
-                statusEl.textContent = "Something went wrong reaching the action-plan service.";
-            } finally {
-                genBtn.disabled = false;
+    //             outputEl.innerHTML = marked.parse(data.markdown || "");
+    //             outputEl.style.display = "block";
+    //             statusEl.textContent = "";
+    //         } catch (err) {
+    //             statusEl.textContent = "Something went wrong reaching the action-plan service.";
+    //         } finally {
+    //             genBtn.disabled = false;
+    //         }
+    //     });
+    // }
+
+    // ---------- Climate Action Steps: generate plan via Airia AI ----------
+document.addEventListener("DOMContentLoaded", () => {
+    const generateBtn = document.getElementById("generatePlanBtn");
+    const outputDiv = document.getElementById("actionPlanOutput");
+    const statusDiv = document.getElementById("actionPlanStatus");
+    const summaryCard = document.getElementById("trend-summary-markdown");
+    const contextEl = document.getElementById("action-context");
+
+    if (!generateBtn) return;
+
+    generateBtn.addEventListener("click", async () => {
+        // Extract country and raw action_summary content dynamically on click
+        const actionContext = contextEl ? JSON.parse(contextEl.textContent) : {};
+        const country = actionContext.country || "";
+        const summary = summaryCard ? summaryCard.dataset.raw : actionContext.summary || "";
+
+        // Update UI state
+        generateBtn.disabled = true;
+        statusDiv.textContent = "Generating custom action plan...";
+        outputDiv.style.display = "none";
+
+        try {
+            const response = await fetch("/api/action-plan", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ country, summary }),
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || `Server error: ${response.status}`);
             }
-        });
-    }
+
+            const data = await response.json();
+            
+            // Render returned markdown safely using marked.js
+            outputDiv.innerHTML = typeof marked !== "undefined" ? marked.parse(data.markdown) : data.markdown;
+            outputDiv.style.display = "block";
+            statusDiv.textContent = "";
+        } catch (err) {
+            statusDiv.textContent = `Failed to generate plan: ${err.message}`;
+        } finally {
+            generateBtn.disabled = false;
+        }
+    });
+});
 })();
