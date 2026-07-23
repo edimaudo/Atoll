@@ -1,13 +1,5 @@
-"""
-main.py — Atoll
-
-Pure routing. Data access + insight text generation live in store.py; this
-file just: validate input, ask store.py for data, render a template.
-"""
-
 import os
 from pathlib import Path
-
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -187,24 +179,17 @@ class ActionPlanRequest(BaseModel):
 @app.post("/api/action-plan")
 async def generate_action_plan(payload: ActionPlanRequest):
     """Sends the dynamic trend summary to Airia AI and returns its markdown
-    response. This is the integration POINT, not a finished integration --
-    Airia's exact request/response contract isn't something we have
-    documented here, so AIRIA_API_URL / AIRIA_API_KEY need to be set as
-    environment variables (in Vercel: Project Settings -> Environment
-    Variables) and the request body below shaped to match Airia's actual
-    API before this will return real output.
+    response. 
     """
-    api_url = os.environ.get("AIRIA_API_URL")
-    api_key = os.environ.get("AIRIA_API_KEY")
+    api_url = os.environ.get("API_URL")
+    api_key = os.environ.get("API_KEY")
 
     if not api_url or not api_key:
         return JSONResponse(
             status_code=501,
             content={
                 "error": (
-                    "Airia AI isn't configured yet. Set AIRIA_API_URL and AIRIA_API_KEY "
-                    "as environment variables, then adjust the request body in "
-                    "generate_action_plan() to match Airia's API contract."
+                    "Airia AI isn't configured yet. Check AIRIA_API_URL and AIRIA_API_KEY "
                 )
             },
         )
@@ -216,11 +201,11 @@ async def generate_action_plan(payload: ActionPlanRequest):
         f"People & Economy):\n\n{payload.summary}"
     )
 
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=300.0) as client:
         response = await client.post(
             api_url,
             headers={"Authorization": f"Bearer {api_key}"},
-            json={"input": prompt},  # TODO: match Airia's actual request schema
+            json={"input": prompt},  
         )
         response.raise_for_status()
         data = response.json()
