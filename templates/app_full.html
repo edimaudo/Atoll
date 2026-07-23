@@ -89,16 +89,10 @@
     </form>
 </div>
 
-<nav class="pillar-subnav">
-    <a href="#pillar-land">Land &amp; Food</a>
-    <a href="#pillar-ocean">Ocean &amp; Atmosphere</a>
-    <a href="#pillar-people">People &amp; Economy</a>
-</nav>
-
 {% for chapter_key, chapter in chapters.items() %}
 <section class="pillar" id="pillar-{{ chapter_key }}">
     <div class="pillar-narrative">
-        <h2 class="sr-only">{{ chapter.title }}</h2>
+        <h2>{{ chapter.title }}</h2>
     </div>
 
     <div class="tabs" data-pillar="{{ chapter_key }}">
@@ -110,8 +104,7 @@
             {% elif chapter_key == "ocean" %}
             <button class="tab-btn" id="tab-btn-ocean-risk" role="tab" aria-controls="ocean-risk" data-target="ocean-risk" aria-selected="false" tabindex="-1">Temperature Risk</button>
             {% elif chapter_key == "people" %}
-            <button class="tab-btn" id="tab-btn-people-mix" role="tab" aria-controls="people-mix" data-target="people-mix" aria-selected="false" tabindex="-1">Power Mix</button>
-            <button class="tab-btn" id="tab-btn-people-flow" role="tab" aria-controls="people-flow" data-target="people-flow" aria-selected="false" tabindex="-1">Power Flow</button>
+            <button class="tab-btn" id="tab-btn-people-power" role="tab" aria-controls="people-power" data-target="people-power" aria-selected="false" tabindex="-1">Power</button>
             {% endif %}
         </div>
 
@@ -236,7 +229,7 @@
         {% endif %}
 
         {% if chapter_key == "people" %}
-        <div class="tab-panel" id="people-mix" role="tabpanel" aria-labelledby="tab-btn-people-mix" tabindex="0" data-render-group="people_mix" style="display:none;">
+        <div class="tab-panel" id="people-power" role="tabpanel" aria-labelledby="tab-btn-people-power" tabindex="0" data-render-group="people_power" style="display:none;">
             <div class="chart-grid">
                 <div class="chart-card" data-charttype="heatmap">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
@@ -254,11 +247,7 @@
                     <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_power_source_insight }}</p>
                 </div>
                 {% endif %}
-            </div>
-        </div>
 
-        <div class="tab-panel" id="people-flow" role="tabpanel" aria-labelledby="tab-btn-people-flow" tabindex="0" data-render-group="people_flow" style="display:none;">
-            <div class="chart-grid">
                 <div class="chart-card" data-charttype="sankey">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Power Generation Flow</h3>
