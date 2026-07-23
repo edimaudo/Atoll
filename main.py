@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 import httpx
@@ -7,7 +6,6 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-
 import store
 
 BASE_DIR = Path(__file__).parent
