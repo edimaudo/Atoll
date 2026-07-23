@@ -280,7 +280,8 @@
         <div class="climate-action-block">
             <h3>Climate Action Steps</h3>
             <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
-            <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button>
+            <!-- <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button> -->
+            <button id="generatePlanBtn" class="btn-cta" data-raw="{{ action_summary | e }}">Generate Action Plan</button>
             <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
         </div>
