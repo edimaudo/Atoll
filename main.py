@@ -195,10 +195,11 @@ async def generate_action_plan(payload: ActionPlanRequest):
         )
 
     prompt = (
-        f"You are a climate change advisor for the Pacific Islands and Territories. Based on this data summary for "
-        f"{payload.country}, write a short, concrete climate action plan in "
-        f"markdown, organized by theme (Land & Food, Ocean & Atmosphere, "
-        f"People & Economy):\n\n{payload.summary}"
+        f"You are a climate adaptation advisor for {payload.country}.\n\n"
+        f"Based on this data summary:\n"
+        f"\"\"\"\n{payload.summary}\n\"\"\"\n\n"
+        f"Write a short, concrete climate action plan in markdown, "
+        f"organized by theme (Land & Food, Ocean & Atmosphere, People & Economy)."
     )
 
     async with httpx.AsyncClient(timeout=300.0) as client:
