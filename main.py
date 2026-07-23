@@ -12,7 +12,7 @@ import store
 
 BASE_DIR = Path(__file__).parent
 
-app = FastAPI(title="Pacific Climate Change")
+app = FastAPI(title="Atoll — Pacific Climate Change")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
