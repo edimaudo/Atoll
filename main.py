@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 import store
+import store_v2
 
 BASE_DIR = Path(__file__).parent
 
@@ -39,14 +40,14 @@ async def app_page(request: Request, country: str = store.DEFAULT_COUNTRY, compa
     compare_data = store.CLIMATE_DATA["countries"][compare] if compare else None
 
     insights = {
-        key: store.build_indicator_insight(
+        key: store_v2.build_indicator_insight_v2(
             country, ind, compare,
             compare_data["indicators"].get(key) if compare_data else None,
         )
         for key, ind in country_data["indicators"].items()
     }
 
-    action_summary = store.build_action_summary(country, country_data, compare, compare_data)
+    action_summary = store_v2.build_action_summary_v2(country, country_data, compare, compare_data)
 
     return templates.TemplateResponse(
         request,
@@ -71,20 +72,18 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
     bars, tail-risk analysis, and the power generation Sankey -- every
     chart type the original notebook actually built.
     """
-    import store_v2
-
     country, country_data = store_v2.get_country_v2(country)
     compare = store.resolve_compare(country, compare)
     compare_data = store_v2.CLIMATE_DATA_V2["countries"][compare] if compare else None
 
     insights = {
-        key: store.build_indicator_insight(
+        key: store_v2.build_indicator_insight_v2(
             country, ind, compare,
             compare_data["indicators"].get(key) if compare_data else None,
         )
         for key, ind in country_data["indicators"].items()
     }
-    action_summary = store.build_action_summary(country, country_data, compare, compare_data)
+    action_summary = store_v2.build_action_summary_v2(country, country_data, compare, compare_data)
 
     ranked = {
         key: store_v2.ranked_products(country_data, key)
@@ -98,8 +97,20 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
         )
         for key in ranked
     }
+    # Per-chart insight for the split Top-10 / Bottom-10 charts (previously
+    # these charts had no accompanying insight text at all).
+    ranked_split_insights = {
+        f"{key}_{which}": (
+            store_v2.ranked_single_insight(country, country_data["indicators"][key]["label"], country_data["indicators"][key]["unit"], ranked[key][which], which)
+            if key in country_data["indicators"]
+            else f"No {key.replace('_', ' ')} data is available for {country}."
+        )
+        for key in ranked
+        for which in ["top", "bottom"]
+    }
     compare_ranked = None
     compare_ranked_insights = None
+    compare_ranked_split_insights = None
     if compare_data:
         compare_ranked = {key: store_v2.ranked_products(compare_data, key) for key in ["crop_yield", "livestock_yield"]}
         compare_ranked_insights = {
@@ -109,6 +120,15 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
                 else f"No {key.replace('_', ' ')} data is available for {compare}."
             )
             for key in compare_ranked
+        }
+        compare_ranked_split_insights = {
+            f"{key}_{which}": (
+                store_v2.ranked_single_insight(compare, compare_data["indicators"][key]["label"], compare_data["indicators"][key]["unit"], compare_ranked[key][which], which)
+                if key in compare_data["indicators"]
+                else f"No {key.replace('_', ' ')} data is available for {compare}."
+            )
+            for key in compare_ranked
+            for which in ["top", "bottom"]
         }
 
     tail_risk_insights = {
@@ -159,6 +179,8 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
             "action_summary": action_summary,
             "ranked_insights": ranked_insights,
             "compare_ranked_insights": compare_ranked_insights,
+            "ranked_split_insights": ranked_split_insights,
+            "compare_ranked_split_insights": compare_ranked_split_insights,
             "tail_risk_insights": tail_risk_insights,
             "power_source_insight": power_source_insight,
             "compare_power_source_insight": compare_power_source_insight,
