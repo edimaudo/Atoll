@@ -124,12 +124,14 @@
                     <h3>Top 10 Crop Products</h3>
                     <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
                     <div id="ranked-crop_yield-top" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_split_insights.crop_yield_top }}</p>
                 </div>
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Bottom 10 Crop Products</h3>
                     <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
                     <div id="ranked-crop_yield-bottom" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_split_insights.crop_yield_bottom }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
@@ -137,12 +139,14 @@
                     <h3>Top 10 Crop Products</h3>
                     <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
                     <div id="ranked-crop_yield-compare-top" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_split_insights.crop_yield_top }}</p>
                 </div>
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Bottom 10 Crop Products</h3>
                     <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
                     <div id="ranked-crop_yield-compare-bottom" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_split_insights.crop_yield_bottom }}</p>
                 </div>
                 {% endif %}
 
@@ -168,12 +172,14 @@
                     <h3>Top 10 Livestock Products</h3>
                     <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
                     <div id="ranked-livestock_yield-top" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_split_insights.livestock_yield_top }}</p>
                 </div>
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-primary">{{ selected_country }}</span>
                     <h3>Bottom 10 Livestock Products</h3>
                     <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
                     <div id="ranked-livestock_yield-bottom" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ ranked_split_insights.livestock_yield_bottom }}</p>
                 </div>
                 {% if compare_country %}
                 <div class="chart-card" data-charttype="ranked">
@@ -181,12 +187,14 @@
                     <h3>Top 10 Livestock Products</h3>
                     <p class="chart-subtitle">Highest median yield by product across all recorded years.</p>
                     <div id="ranked-livestock_yield-compare-top" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_split_insights.livestock_yield_top }}</p>
                 </div>
                 <div class="chart-card" data-charttype="ranked">
                     <span class="chart-panel-label role-compare">{{ compare_country }}</span>
                     <h3>Bottom 10 Livestock Products</h3>
                     <p class="chart-subtitle">Lowest median yield by product across all recorded years.</p>
                     <div id="ranked-livestock_yield-compare-bottom" class="plotly-chart" style="min-height: 380px;"></div>
+                    <p class="chart-insight"><span class="takeaway-label">Takeaway:</span> {{ compare_ranked_split_insights.livestock_yield_bottom }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -275,7 +283,6 @@
         <div class="climate-action-block">
             <h3>Climate Action Steps</h3>
             <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
-            <!-- <button id="generatePlanBtn" class="btn-cta">Generate Action Plan</button> -->
             <button id="generatePlanBtn" class="btn-cta" data-raw="{{ action_summary | e }}">Generate Action Plan</button>
             <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
@@ -285,7 +292,6 @@
 
 <script id="chart-payload" type="application/json">{{ chart_payload | tojson }}</script>
 <script id="v2-payload" type="application/json">{{ v2_payload | tojson }}</script>
-<script id="action-context" type="application/json">{{ {"country": selected_country, "summary": action_summary} | tojson }}</script>
 {% endblock %}
 
 {% block scripts %}
