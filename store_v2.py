@@ -26,6 +26,114 @@ def get_country_v2(name: str, fallback: str = store.DEFAULT_COUNTRY) -> tuple[st
     return name, CLIMATE_DATA_V2["countries"][name]
 
 
+def _direction(slope) -> str:
+    if slope is None:
+        return "held steady"
+    return "risen" if slope > 0 else "fallen"
+
+
+def build_indicator_insight_v2(country: str, ind: dict, compare: str = "", compare_ind: dict | None = None) -> str:
+    """Per-chart dynamic insight, v2: describes the TOTAL change across the
+    whole recorded timeline (e.g. "risen from X to Y over 175 years, a
+    total change of Z") instead of a per-decade rate. A per-decade rate
+    is hard to mentally translate into "how much did this actually
+    change" -- especially over a 175-year series -- so this states the
+    overall before/after and total change directly instead.
+    """
+    years, values, median = ind["years"], ind["values"], ind["regional_median"]
+    trend = ind["trend"]
+    label, unit = ind["label"], ind["unit"]
+
+    if trend["slope_per_decade"] is None:
+        return f"Data for {label.lower()} is too limited for {country} to establish a trend."
+
+    slope_year, intercept = trend["slope_per_year"], trend["intercept"]
+    fitted_start = slope_year * years[0] + intercept
+    fitted_end = slope_year * years[-1] + intercept
+    total_change = fitted_end - fitted_start
+    span_years = years[-1] - years[0]
+
+    parts = [
+        f"Over the {span_years} years from {years[0]} to {years[-1]}, {country}'s {label.lower()} has "
+        f"{_direction(trend['slope_per_decade'])} overall -- from roughly {fitted_start:.2f}{unit} to "
+        f"{fitted_end:.2f}{unit}, a total change of {abs(total_change):.2f}{unit} across the whole record."
+    ]
+
+    if median and median[-1] is not None:
+        last_val, last_med = values[-1], median[-1]
+        if abs(last_val - last_med) < 1e-6:
+            parts.append(f"That's in line with the regional median of {last_med:.2f}{unit}.")
+        else:
+            rel = "above" if last_val > last_med else "below"
+            parts.append(f"That's {abs(last_val - last_med):.2f}{unit} {rel} the regional median ({last_med:.2f}{unit}).")
+
+    if compare and compare_ind and compare_ind.get("values"):
+        c_years, c_values = compare_ind["years"], compare_ind["values"]
+        c_trend = compare_ind["trend"]
+        if c_years and c_values:
+            rel = "higher than" if values[-1] > c_values[-1] else ("lower than" if values[-1] < c_values[-1] else "the same as")
+            comparison = (
+                f"By comparison, {compare}'s most recent value is {abs(values[-1] - c_values[-1]):.2f}{unit} "
+                f"{rel} {country}'s."
+            )
+            if c_trend["slope_per_decade"] is not None:
+                c_slope_year, c_intercept = c_trend["slope_per_year"], c_trend["intercept"]
+                c_total_change = (c_slope_year * c_years[-1] + c_intercept) - (c_slope_year * c_years[0] + c_intercept)
+                c_span = c_years[-1] - c_years[0]
+                comparison += (
+                    f" Over its own {c_span}-year record, {compare} has {_direction(c_trend['slope_per_decade'])} "
+                    f"by a total of {abs(c_total_change):.2f}{unit}."
+                )
+            parts.append(comparison)
+
+    return " ".join(parts)
+
+
+def build_action_summary_v2(country: str, country_data: dict, compare: str = "", compare_data: dict | None = None) -> str:
+    """Dynamic multi-pillar Trend Summary, v2 -- same structure as before
+    (one synthesized paragraph per pillar), now built on the overall-
+    timeline insight sentences instead of per-decade framing.
+    """
+    chapters = store.CLIMATE_DATA["chapters"]
+    sentences = []
+
+    for chapter_key in ["land", "ocean", "people"]:
+        chapter = chapters[chapter_key]
+        chapter_lines = []
+        for ind_key in chapter["indicators"]:
+            ind = country_data["indicators"].get(ind_key)
+            if not ind or ind["trend"]["slope_per_decade"] is None:
+                continue
+            compare_ind = (compare_data["indicators"].get(ind_key) if compare_data else None)
+            chapter_lines.append(build_indicator_insight_v2(country, ind, compare, compare_ind))
+
+        if chapter_lines:
+            sentences.append(f"**{chapter['title']}**: " + " ".join(chapter_lines))
+
+    return "\n\n".join(sentences)
+
+
+def ranked_single_insight(country: str, indicator_label: str, unit: str, ranked_list: list, which: str) -> str:
+    """Dynamic insight for a single Top-10 or Bottom-10 ranked bar chart
+    (previously missing entirely -- these charts had no accompanying
+    insight text at all)."""
+    if not ranked_list:
+        return f"Not enough product-level data is available for {country}."
+
+    leader_name, leader_val = ranked_list[0]
+    n = len(ranked_list)
+
+    if which == "top":
+        return (
+            f"{leader_name} has the highest median {indicator_label.lower()} in {country} at {leader_val:.2f}{unit}, "
+            f"the leading product among the top {n}."
+        )
+    return (
+        f"{leader_name} has the lowest median {indicator_label.lower()} in {country} at {leader_val:.2f}{unit}, "
+        f"the least productive of the bottom {n}."
+    )
+
+
 def ranked_products(country_data: dict, indicator_key: str, n: int = 10) -> dict:
     """Top-N / bottom-N products by median value across all recorded years."""
     products = country_data["products"].get(indicator_key, {})
