@@ -79,12 +79,16 @@
     // ---------- Climate Action Steps: generate plan via Airia AI ----------
     const genBtn = document.getElementById("generatePlanBtn");
     if (genBtn) {
-        const actionContextEl = document.getElementById("action-context");
-        const actionContext = actionContextEl ? JSON.parse(actionContextEl.textContent) : null;
+        const countrySelectEl = document.getElementById("countrySelect");
         const statusEl = document.getElementById("actionPlanStatus");
         const outputEl = document.getElementById("actionPlanOutput");
 
         genBtn.addEventListener("click", async () => {
+            const actionContext = {
+                country: countrySelectEl ? countrySelectEl.value : "",
+                summary: genBtn.dataset.raw || "",
+            };
+
             statusEl.textContent = "Generating action plan...";
             outputEl.style.display = "none";
             genBtn.disabled = true;
