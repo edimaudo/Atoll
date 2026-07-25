@@ -9,6 +9,8 @@ from pydantic import BaseModel
 
 import store
 import store_v2
+import requests
+import json
 
 BASE_DIR = Path(__file__).parent
 
@@ -227,9 +229,20 @@ async def generate_action_plan(payload: ActionPlanRequest):
     async with httpx.AsyncClient(timeout=300.0) as client:
         response = await client.post(
             api_url,
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={"input": prompt},  
+            headers={
+                "X-API-KEY": api_key,
+                "Content-Type": "application/json"
+            },
+            json={
+                "userInput": prompt,
+                "asyncOutput": False
+            },  
         )
+        # response = await client.post(
+        #     api_url,
+        #     headers={"Authorization": f"Bearer {api_key}"},
+        #     json={"input": prompt},  
+        # )
         response.raise_for_status()
         data = response.json()
 
