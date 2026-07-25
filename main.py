@@ -204,7 +204,7 @@ async def generate_action_plan(payload: ActionPlanRequest):
     response. 
     """
     api_url = 'https://api.airia.ai/v2/PipelineExecution/0c6dd785-b1f2-42a4-8637-d81560f4b0a5' #os.environ.get("API_URL")
-    api_key = os.environ.get("API_KEY")
+    api_key = os.environ.get("AIRIA_API_KEY")
 
     if not api_url or not api_key:
         return JSONResponse(
@@ -251,7 +251,5 @@ async def custom_500_handler(request: Request, _exc):
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     # Catches anything that isn't an explicit HTTPException (e.g. a KeyError
-    # from a data gap we didn't anticipate) so a real user sees a friendly
-    # page instead of a raw traceback. Logged server-side either way.
     print(f"Unhandled exception on {request.url}: {exc!r}")
     return templates.TemplateResponse(request, "500.html", status_code=500)
