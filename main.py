@@ -10,17 +10,26 @@ import store
 import store_v2
 import requests
 import json
+from fastapi.middleware.gzip import GZipMiddleware
 
 BASE_DIR = Path(__file__).parent
 
+class CachedStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope) -> Response:
+        response = await super().get_response(path, scope)
+        if path.startswith("vendor/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return response
+
 app = FastAPI(title="Atoll — Pacific Climate Change")
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    """Hook, how-to-navigate, datasets used, one CTA into the app."""
+    """Landing page"""
     return templates.TemplateResponse(
         request,
         "index.html",
@@ -266,50 +275,6 @@ async def generate_action_plan(payload: ActionPlanRequest):
         markdown_text = str(data)
 
     return {"markdown": markdown_text}
-# @app.post("/api/action-plan")
-# async def generate_action_plan(payload: ActionPlanRequest):
-#     """Sends the dynamic trend summary to Airia AI and returns its markdown
-#     response. 
-#     """
-#     api_url = 'https://api.airia.ai/v2/PipelineExecution/0c6dd785-b1f2-42a4-8637-d81560f4b0a5' #os.environ.get("API_URL")
-#     api_key = os.environ.get("AIRIA_API_KEY")
-
-#     if not api_url or not api_key:
-#         return JSONResponse(
-#             status_code=501,
-#             content={
-#                 "error": (
-#                     "Airia AI isn't configured yet. Check AIRIA_API_URL and AIRIA_API_KEY "
-#                 )
-#             },
-#         )
-
-#     prompt = (
-#         f"You are a climate change expert and advisor for {payload.country}.\n\n"
-#         f"Based on this data summary:\n"
-#         f"\"\"\"\n{payload.summary}\n\"\"\"\n\n"
-#         f"Write a short, concrete climate action plan in markdown, "
-#         f"organized by theme (Land & Food, Ocean & Atmosphere, People & Economy)."
-#     )
-
-#     async with httpx.AsyncClient(timeout=300.0) as client:
-#         response = await client.post(
-#             api_url,
-#             headers={
-#                 "X-API-KEY": api_key,
-#                 "Content-Type": "application/json"
-#             },
-#             json={
-#                 "userInput": prompt,
-#                 "asyncOutput": False
-#             },  
-#         )
-#         response.raise_for_status()
-#         data = response.json()
-
-#     # TODO: adjust to however Airia's response actually nests the markdown text
-#     markdown = data.get("output") or data.get("text") or str(data)
-#     return {"markdown": markdown}
 
 
 @app.exception_handler(404)
