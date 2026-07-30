@@ -4,8 +4,8 @@ The theme of the 2026 Pacific Dataviz Challenge is "Climate Change". Pacific Isl
 This application transforms open data into a clear climate change narrative across 22 Pacific countries and territories.
 
 ## Design
-Front end: Jinja Templates, Plotly, Pandas, CSS
+**Frontend**: Jinja Templates, Plotly, Pandas, CSS
 
-Backend: FastAPI, Vercel
+**Backend**: FastAPI, Vercel
 
-AI: Airia.ai
+**AI**: Airia.ai
