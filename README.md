@@ -5,4 +5,7 @@ This application transforms open data into a clear climate change narrative acro
 
 ## Design
 Front end: Jinja Templates, Plotly, Pandas, CSS
+
 Backend: FastAPI, Vercel
+
+AI: Airia.ai
