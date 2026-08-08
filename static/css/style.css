@@ -1,14 +1,3 @@
-/* ============================================================
-   ATOLL — design tokens
-   Palette: IBM Carbon neutral gray scale for backgrounds (theme-
-   distinguishable in both light and dark), Purple as the primary
-   brand/interactive accent, coral/amber/moss/current as data-viz
-   accent colors. Every pair below is contrast-checked (see
-   wcag_check.py) against WCAG 2.1 AA, 4.5:1 for text.
-   Type: IBM Plex Serif (display headings) + IBM Plex Sans (body/UI) +
-   IBM Plex Mono (data figures, captions, coordinates).
-   ============================================================ */
-
 :root {
     --header-bg: #161616;
     --hero-bg: #ffffff;
