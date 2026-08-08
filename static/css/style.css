@@ -50,20 +50,20 @@ body {
     margin: 0;
     background: var(--page-bg);
     color: var(--ink);
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     line-height: 1.6;
     transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1, h2, h3 {
-    font-family: 'IBM Plex Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: var(--ink);
     margin: 0 0 0.4em 0;
 }
 
 .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Inter', monospace;
     font-size: 0.8rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -76,7 +76,7 @@ a { color: var(--brand); }
 [data-theme="dark"] a { color: var(--brand-light); }
 
 .data-figure {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Inter', monospace;
 }
 
 /* ---------- header / footer ---------- */
@@ -91,7 +91,7 @@ a { color: var(--brand); }
 }
 
 .wordmark {
-    font-family: 'IBM Plex Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 1.4rem;
     color: var(--foam) !important;
