@@ -1,36 +1,3 @@
-"""
-Pacific Data Viz 2026
-=====================
-
-Refactored from `Pacific_Data_Viz_2026.ipynb` into a single script.
-
-The notebook contained ~70 cells covering 11 Pacific climate/economic
-datasets. Almost every section repeated the same four-step recipe:
-
-    1. filter the raw dataframe + rename OBS_VALUE -> a friendly column name
-    2. aggregate to one value per Country/Year (median)
-    3. build a "country vs. regional median" line chart with custom hover text
-    4. generate a templated markdown "dynamic insight" paragraph
-
-A few sections repeat two other recipes: a top/bottom-10 bar chart, and a
-product x year heatmap. One section (power generation) also builds a Sankey
-diagram, and two sections (temperature, rainfall) run a "tail risk" analysis
-(values more than 2 standard deviations from the mean).
-
-Rather than pasting all 70 cells one after another, this script factors each
-recipe into a single reusable function and calls it once per dataset. This
-cuts the ~2500 lines of near-duplicate notebook code down to a few hundred
-lines of shared logic plus a short, readable "recipe" per section.
-
-Note: `sklearn.cluster.KMeans`, `sklearn.preprocessing.StandardScaler`, and
-`statsmodels.tsa.stattools.grangercausalitytests`/`xgboost` were imported in
-the original notebook but never used anywhere in its 70 cells, so they are
-dropped here. `environmental_taxes_df`, `greenhouse_gas_emissions_df`, and
-`meteorological_monitoring_df` are loaded and cleaned (for the shared
-country list) but were likewise never visualized in the notebook; they are
-kept here for the same reason, ready for a future section to use.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
