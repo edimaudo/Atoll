@@ -1,8 +1,6 @@
 from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Optional
-
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -48,7 +46,7 @@ COLORS = {
 
 
 # --------------------------------------------------------------------------
-# 1. Data loading & consolidation
+# Data loading & consolidation
 # --------------------------------------------------------------------------
 
 def load_datasets() -> dict[str, pd.DataFrame]:
@@ -109,8 +107,7 @@ def filter_and_rename(
 
 
 # --------------------------------------------------------------------------
-# 2. Shared "country vs. regional median" line-chart recipe
-#    (covers sections B, D, E, F, J, L)
+# Shared "country vs. regional median" line-chart
 # --------------------------------------------------------------------------
 
 @dataclass
@@ -277,7 +274,7 @@ During the same period, the **regional median** has shown {median_trend}.
 
 
 # --------------------------------------------------------------------------
-# 3. Shared "tail risk" recipe (covers sections H, I)
+#  Shared "tail risk" recipe
 # --------------------------------------------------------------------------
 
 def tail_risk_chart(
@@ -351,8 +348,7 @@ Extreme events are defined as anomalies exceeding **{threshold:.2f}{unit}** abov
 
 
 # --------------------------------------------------------------------------
-# 4. Shared heatmap & top/bottom bar-chart recipes
-#    (covers sections F-heatmap, F-ranking, J-heatmap, J-ranking, K-heatmap)
+# Shared heatmap & top/bottom bar-chart recipes
 # --------------------------------------------------------------------------
 
 def build_product_heatmap(
@@ -409,7 +405,7 @@ def build_top_bottom_bars(
 
 
 # --------------------------------------------------------------------------
-# 5. Section functions (the notebook's A-L headings)
+# Section functions
 # --------------------------------------------------------------------------
 
 def section_temperature(datasets: dict[str, pd.DataFrame], country: str) -> None:
@@ -683,7 +679,7 @@ def section_tourism(datasets: dict[str, pd.DataFrame], country: str) -> None:
 
 
 # --------------------------------------------------------------------------
-# 6. Orchestration
+# Orchestration
 # --------------------------------------------------------------------------
 
 def main(country: str = SELECTED_COUNTRY) -> None:
