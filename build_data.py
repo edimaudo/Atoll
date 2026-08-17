@@ -5,22 +5,7 @@ Runs once (locally or in CI), computes everything the app needs from the
 source CSVs, writes static/data/climate_data.json. main.py/store.py never
 import pandas -- they just read this file at request time.
 
-Architecture note (changed this round): insight SENTENCES are no longer
-generated here. A country's JSON entry can't know ahead of time which
-compare-country a visitor will pick at request time, so per-chart dynamic
-insight text (which must reference the compare country when one is
-selected) is generated live in store.py from the numeric trend stats this
-file DOES precompute (slope, r-squared, full series, regional median).
-That keeps pandas out of the request path while still letting the insight
-text react to whatever's actually on the page.
 
-7 datasets are included -- every dataset from the original notebook that
-actually had a visualization built for it (temperature anomaly, sea
-surface temp anomaly, rainfall anomaly, crop yield, livestock yield, power
-generation, tourism arrivals). The other 4 source CSVs (environmental
-taxes, GHG emissions per capita, meteorological monitoring, sea level
-anomalies) were loaded in the notebook but never turned into a chart there
-either, so there's no existing visualization to carry over for those.
 """
 
 from __future__ import annotations
@@ -47,6 +32,14 @@ INDICATORS = {
         "filters": {"CLIMATE_CHANGE_INDICATORS": "SST_ANOM", "UNIT_MEASURE": "CELSIUS"},
         "unit": "\u00b0C",
         "label": "Sea Surface Temperature Anomaly",
+        "chapter": "ocean",
+        "agg": "median",
+    },
+    "sea_level_anomaly": {
+        "file": "Sea%20level%20anomalies.csv",
+        "filters": {"CLIMATE_CHANGE_INDICATORS": "SEA_LVL", "UNIT_MEASURE": "METER"},
+        "unit": " m",
+        "label": "Sea Level Anomaly",
         "chapter": "ocean",
         "agg": "median",
     },
