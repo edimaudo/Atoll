@@ -79,7 +79,6 @@ async def landing(request: Request):
 @app.get("/app/full", response_class=HTMLResponse)
 async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, compare: str = ""):
 
-    """
     country, country_data = store_v2.get_country_v2(country)
     compare = store.resolve_compare(country, compare)
     compare_data = store_v2.CLIMATE_DATA_V2["countries"][compare] if compare else None
