@@ -277,13 +277,13 @@
 <section class="action-steps">
     <div class="action-steps-inner">
         
-        <h2>Trend Summary for {{ selected_country }}{% if compare_country %} vs. {{ compare_country }}{% endif %}</h2>
+        <h2>Summary for {{ selected_country }}{% if compare_country %} vs. {{ compare_country }}{% endif %}</h2>
         <div class="action-card" id="trend-summary-markdown" data-raw="{{ action_summary | e }}"></div>
 
         <div class="climate-action-block">
             <h3>Climate Action Steps</h3>
-            <p>Generate a concrete climate action plan for {{ selected_country }} based on the trend summary above.</p>
-            <button id="generatePlanBtn" class="btn-cta" data-raw="{{ action_summary | e }}">Generate Action Plan</button>
+            <p>Generate a climate action plan for {{ selected_country }} based on the trend summary using AI.</p>
+            <button id="generatePlanBtn" class="btn-cta" data-raw="{{ action_summary | e }}">Create Action Plan</button>
             <div id="actionPlanStatus" class="action-plan-status" aria-live="polite" role="status"></div>
             <div id="actionPlanOutput" class="action-card action-plan-output" style="display:none;"></div>
         </div>
