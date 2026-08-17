@@ -40,40 +40,40 @@ async def landing(request: Request):
     )
 
 
-@app.get("/app", response_class=HTMLResponse)
-async def app_page(request: Request, country: str = store.DEFAULT_COUNTRY, compare: str = ""):
-    """v1: line charts for all 7 datasets, compare-aware, one dynamic
-    insight per chart, plus the Action Steps dynamic summary + LLM button.
-    """
-    country, country_data = store.get_country(country)
-    compare = store.resolve_compare(country, compare)
-    compare_data = store.CLIMATE_DATA["countries"][compare] if compare else None
+# @app.get("/app", response_class=HTMLResponse)
+# async def app_page(request: Request, country: str = store.DEFAULT_COUNTRY, compare: str = ""):
+#     """v1: line charts for all 7 datasets, compare-aware, one dynamic
+#     insight per chart, plus the Action Steps dynamic summary + LLM button.
+#     """
+#     country, country_data = store.get_country(country)
+#     compare = store.resolve_compare(country, compare)
+#     compare_data = store.CLIMATE_DATA["countries"][compare] if compare else None
 
-    insights = {
-        key: store_v2.build_indicator_insight_v2(
-            country, ind, compare,
-            compare_data["indicators"].get(key) if compare_data else None,
-        )
-        for key, ind in country_data["indicators"].items()
-    }
+#     insights = {
+#         key: store_v2.build_indicator_insight_v2(
+#             country, ind, compare,
+#             compare_data["indicators"].get(key) if compare_data else None,
+#         )
+#         for key, ind in country_data["indicators"].items()
+#     }
 
-    action_summary = store_v2.build_action_summary_v2(country, country_data, compare, compare_data)
+#     action_summary = store_v2.build_action_summary_v2(country, country_data, compare, compare_data)
 
-    return templates.TemplateResponse(
-        request,
-        "app.html",
-        {
-            "country_names": store.COUNTRY_NAMES,
-            "selected_country": country,
-            "compare_country": compare,
-            "country_data": country_data,
-            "chapters": store.CLIMATE_DATA["chapters"],
-            "insights": insights,
-            "action_summary": action_summary,
-            "chart_payload": store.build_chart_payload(country, country_data, compare),
-            "all_country_positions": store.CLIMATE_DATA["all_country_positions"],
-        },
-    )
+#     return templates.TemplateResponse(
+#         request,
+#         "app.html",
+#         {
+#             "country_names": store.COUNTRY_NAMES,
+#             "selected_country": country,
+#             "compare_country": compare,
+#             "country_data": country_data,
+#             "chapters": store.CLIMATE_DATA["chapters"],
+#             "insights": insights,
+#             "action_summary": action_summary,
+#             "chart_payload": store.build_chart_payload(country, country_data, compare),
+#             "all_country_positions": store.CLIMATE_DATA["all_country_positions"],
+#         },
+#     )
 
 
 @app.get("/app/full", response_class=HTMLResponse)
@@ -107,8 +107,7 @@ async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, 
         )
         for key in ranked
     }
-    # Per-chart insight for the split Top-10 / Bottom-10 charts (previously
-    # these charts had no accompanying insight text at all).
+    # Per-chart insight for the split Top-10 / Bottom-10 charts 
     ranked_split_insights = {
         f"{key}_{which}": (
             store_v2.ranked_single_insight(country, country_data["indicators"][key]["label"], country_data["indicators"][key]["unit"], ranked[key][which], which)
