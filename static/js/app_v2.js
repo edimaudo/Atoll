@@ -181,6 +181,14 @@
             drawTailRisk("tailrisk-surface_temp_anomaly", v2.primary.tail_risk.surface_temp_anomaly,
                 v2.compare ? v2.compare.tail_risk.surface_temp_anomaly : null,
                 v2.primary.name, v2.compare ? v2.compare.name : null, "\u00b0C");
+            drawTailRisk("tailrisk-sea_surface_temp_anomaly", v2.primary.tail_risk.sea_surface_temp_anomaly,
+                v2.compare ? v2.compare.tail_risk.sea_surface_temp_anomaly : null,
+                v2.primary.name, v2.compare ? v2.compare.name : null, "\u00b0C");
+        },
+        ocean_sealevel_risk: () => {
+            drawTailRisk("tailrisk-sea_level_anomaly", v2.primary.tail_risk.sea_level_anomaly,
+                v2.compare ? v2.compare.tail_risk.sea_level_anomaly : null,
+                v2.primary.name, v2.compare ? v2.compare.name : null, " m");
         },
         people_power: () => {
             drawHeatmap("heatmap-power_sources", v2.primary.power_sources, "GWH");
