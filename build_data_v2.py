@@ -1,15 +1,5 @@
 """
 build_data_v2.py — Atoll v2 data build (additive)
-
-Runs AFTER build_data.py. Reads static/data/climate_data.json (v1's output)
-and adds the extra chart data v2 needs on top of it: product-level crop/
-livestock breakdowns (for heatmaps + ranked top/bottom-10 bars), power
-generation by energy source (heatmap) and by source+grid-connection
-(Sankey), and tail-risk statistics (temperature + rainfall extreme
-events). Writes static/data/climate_data_v2.json as a standalone file --
-v1 and v2 are separate artifacts, so /app (v1) is unaffected by any of this.
-
-Reuses build_data.py's loaders/country metadata rather than duplicating them.
 """
 
 from __future__ import annotations
@@ -35,7 +25,7 @@ PRODUCT_DATASETS = {
     },
 }
 
-TAIL_RISK_INDICATORS = ["surface_temp_anomaly", "rainfall_anomaly"]
+TAIL_RISK_INDICATORS = ["surface_temp_anomaly", "sea_surface_temp_anomaly", "rainfall_anomaly", "sea_level_anomaly"]
 
 
 def load_product_data(cfg: dict) -> pd.DataFrame:
