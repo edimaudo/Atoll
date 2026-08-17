@@ -74,6 +74,7 @@
             <button class="tab-btn" id="tab-btn-land-risk" role="tab" aria-controls="land-risk" data-target="land-risk" aria-selected="false" tabindex="-1">Rainfall Risk</button>
             {% elif chapter_key == "ocean" %}
             <button class="tab-btn" id="tab-btn-ocean-risk" role="tab" aria-controls="ocean-risk" data-target="ocean-risk" aria-selected="false" tabindex="-1">Temperature Risk</button>
+            <button class="tab-btn" id="tab-btn-ocean-sealevel" role="tab" aria-controls="ocean-sealevel" data-target="ocean-sealevel" aria-selected="false" tabindex="-1">Sea Level Risk</button>
             {% elif chapter_key == "people" %}
             <button class="tab-btn" id="tab-btn-people-power" role="tab" aria-controls="people-power" data-target="people-power" aria-selected="false" tabindex="-1">Power</button>
             {% endif %}
@@ -226,6 +227,29 @@
                         {% if compare_country %}<span class="k-compare">{{ compare_country }}</span>{% endif %}
                     </div>
                     <p class="chart-insight">{{ tail_risk_insights.surface_temp_anomaly }}</p>
+                </div>
+                <div class="chart-card" data-charttype="tailrisk">
+                    <h3>Sea Surface Temperature Anomaly — Tail-Risk Analysis</h3>
+                    <div id="tailrisk-sea_surface_temp_anomaly" class="plotly-chart"></div>
+                    <div class="legend-key">
+                        <span class="k-primary">{{ selected_country }}</span>
+                        {% if compare_country %}<span class="k-compare">{{ compare_country }}</span>{% endif %}
+                    </div>
+                    <p class="chart-insight">{{ tail_risk_insights.sea_surface_temp_anomaly }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-panel" id="ocean-sealevel" role="tabpanel" aria-labelledby="tab-btn-ocean-sealevel" tabindex="0" data-render-group="ocean_sealevel_risk" style="display:none;">
+            <div class="chart-grid">
+                <div class="chart-card" data-charttype="tailrisk">
+                    <h3>Sea Level Anomaly — Tail-Risk Analysis</h3>
+                    <div id="tailrisk-sea_level_anomaly" class="plotly-chart"></div>
+                    <div class="legend-key">
+                        <span class="k-primary">{{ selected_country }}</span>
+                        {% if compare_country %}<span class="k-compare">{{ compare_country }}</span>{% endif %}
+                    </div>
+                    <p class="chart-insight">{{ tail_risk_insights.sea_level_anomaly }}</p>
                 </div>
             </div>
         </div>
