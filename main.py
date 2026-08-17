@@ -78,9 +78,7 @@ async def landing(request: Request):
 
 @app.get("/app/full", response_class=HTMLResponse)
 async def app_page_full(request: Request, country: str = store.DEFAULT_COUNTRY, compare: str = ""):
-    """v2: everything v1 has, plus product heatmaps, ranked top/bottom-10
-    bars, tail-risk analysis, and the power generation Sankey -- every
-    chart type the original notebook actually built.
+
     """
     country, country_data = store_v2.get_country_v2(country)
     compare = store.resolve_compare(country, compare)
