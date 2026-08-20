@@ -5,8 +5,6 @@ Pacific Islands & Territories are uniquely vulnerable to the impacts of climate 
 This application transforms open data into a clear climate change narrative across 22 Pacific countries and territories.
 
 ## Design
-**Frontend**: Jinja2 Templates, Plotly, Pandas, CSS
-
-**Backend**: FastAPI, Vercel
-
-**AI**: Airia.ai
+- **Frontend**: Jinja2 Templates, Plotly, Pandas, CSS
+- **Backend**: FastAPI, Vercel
+- **AI**: Airia.ai
